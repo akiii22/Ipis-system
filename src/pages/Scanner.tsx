@@ -2,7 +2,7 @@ import { useRef, useState } from "react";
 
 const Scanner = () => {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
-  const cameraInputRef = useRef<HTMLInputElement | null>(null); // Added for direct camera access
+  const cameraInputRef = useRef<HTMLInputElement | null>(null); 
 
   const [image, setImage] = useState<string | null>(null);
 
