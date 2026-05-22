@@ -16,16 +16,17 @@ const Scanner = () => {
   };
 
   return (
-    <div className="space-y-6">
+<div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold text-slate-700">Pest Scanner</h1>
+        <h1 className="text-3xl font-bold text-slate-800">Pest Scanner</h1>
         <p className="text-gray-500 mt-2">Upload or capture a pest image</p>
       </div>
 
       {/* Upload Card */}
       <div className="bg-white rounded-3xl shadow-md p-6">
-        <div className="border-2 border-dashed border-green-300 rounded-3xl p-10 flex flex-col items-center justify-center text-center">
+        {/* Changed dashed border from green-300 to slate-300 */}
+        <div className="border-2 border-dashed border-slate-300 rounded-3xl p-10 flex flex-col items-center justify-center text-center">
           {/* Preview */}
           {image ? (
             <img
@@ -41,18 +42,18 @@ const Scanner = () => {
 
           {/* Buttons */}
           <div className="flex flex-col md:flex-row gap-4 mt-4">
-            {/* Upload Button */}
+            {/* Upload Button - Solid Dark Theme */}
             <button
               onClick={() => fileInputRef.current?.click()}
-              className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-xl transition"
+              className="bg-slate-800 hover:bg-slate-900 text-white px-6 py-3 rounded-xl transition font-medium cursor-pointer"
             >
               Upload Image
             </button>
 
-            {/* Camera Button */}
+            {/* Camera Button - Clean Outline Variant */}
             <button
               onClick={() => cameraInputRef.current?.click()} // Connected to the camera input
-              className="bg-emerald-500 hover:bg-emerald-600 text-white px-6 py-3 rounded-xl transition"
+              className="border-2 border-slate-700 hover:bg-slate-50 text-slate-800 px-6 py-3 rounded-xl transition font-medium cursor-pointer"
             >
               Open Camera
             </button>
@@ -81,11 +82,12 @@ const Scanner = () => {
 
       {/* Mock AI Result */}
       <div className="bg-white rounded-3xl shadow-md p-6">
-        <h2 className="text-2xl font-bold text-slate-700 mb-4">AI Result</h2>
+        <h2 className="text-2xl font-bold text-slate-800 mb-4">AI Result</h2>
         <div className="space-y-4">
           <div className="flex justify-between">
             <span className="text-gray-500">Pest Name</span>
-            <span className="font-semibold text-green-600">Cockroach</span>
+            {/* Changed from text-green-600 to text-slate-800 */}
+            <span className="font-semibold text-slate-800">Cockroach</span>
           </div>
           <div className="flex justify-between">
             <span className="text-gray-500">Confidence</span>
@@ -93,7 +95,7 @@ const Scanner = () => {
           </div>
           <div className="flex justify-between">
             <span className="text-gray-500">Risk Level</span>
-            <span className="bg-red-100 text-red-500 px-3 py-1 rounded-full text-sm">
+            <span className="bg-red-100 text-red-600 px-3 py-1 rounded-full text-sm font-medium">
               High
             </span>
           </div>

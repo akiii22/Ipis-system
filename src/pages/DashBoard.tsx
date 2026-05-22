@@ -1,15 +1,15 @@
 const Dashboard = () => {
   return (
-    <div className="space-y-6">
+   <div className="space-y-6">
 
       {/* Welcome Card */}
-      <div className="bg-linear-to-r from-green-500 to-emerald-400 text-white p-6 rounded-3xl shadow-lg">
+      <div className="bg-gradient-to-r from-slate-800 to-slate-700 text-white p-6 rounded-3xl shadow-lg">
         
         <h1 className="text-3xl font-bold">
           Welcome to I.P.I.S 🌿
         </h1>
 
-        <p className="mt-2 text-green-50">
+        <p className="mt-2 text-slate-300">
           Intelligent Pest Identification System
         </p>
       </div>
@@ -22,7 +22,7 @@ const Dashboard = () => {
             Total Scans
           </h2>
 
-          <p className="text-3xl font-bold text-green-600 mt-2">
+          <p className="text-3xl font-bold text-slate-800 mt-2">
             120
           </p>
         </div>
@@ -32,7 +32,7 @@ const Dashboard = () => {
             Most Detected
           </h2>
 
-          <p className="text-2xl font-bold text-green-600 mt-2">
+          <p className="text-2xl font-bold text-slate-800 mt-2">
             Aphids
           </p>
         </div>
@@ -42,7 +42,7 @@ const Dashboard = () => {
             Accuracy
           </h2>
 
-          <p className="text-3xl font-bold text-green-600 mt-2">
+          <p className="text-3xl font-bold text-slate-800 mt-2">
             94%
           </p>
         </div>
@@ -51,7 +51,7 @@ const Dashboard = () => {
       {/* Recent Scans */}
       <div className="bg-white rounded-3xl p-6 shadow-md">
         
-        <h2 className="text-xl font-bold text-slate-700 mb-4">
+        <h2 className="text-xl font-bold text-slate-800 mb-4">
           Recent Scans
         </h2>
 
@@ -59,26 +59,26 @@ const Dashboard = () => {
           
           <div className="flex items-center justify-between border-b pb-3">
             <div>
-              <p className="font-medium">Cockroach</p>
+              <p className="font-medium text-slate-700">Cockroach</p>
               <p className="text-sm text-gray-500">
                 Detected today
               </p>
             </div>
 
-            <span className="bg-red-100 text-red-500 px-3 py-1 rounded-full text-sm">
+            <span className="bg-red-100 text-red-600 px-3 py-1 rounded-full text-sm font-medium">
               High Risk
             </span>
           </div>
 
           <div className="flex items-center justify-between border-b pb-3">
             <div>
-              <p className="font-medium">Caterpillar</p>
+              <p className="font-medium text-slate-700">Caterpillar</p>
               <p className="text-sm text-gray-500">
                 Detected yesterday
               </p>
             </div>
 
-            <span className="bg-yellow-100 text-yellow-600 px-3 py-1 rounded-full text-sm">
+            <span className="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-sm font-medium">
               Medium Risk
             </span>
           </div>

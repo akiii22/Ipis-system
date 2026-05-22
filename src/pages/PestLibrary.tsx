@@ -86,11 +86,11 @@ const PestLibrary = () => {
   };
 
   return (
-    <div className="space-y-6">
+   <div className="space-y-6">
 
       {/* HEADER */}
       <div>
-        <h1 className="text-3xl font-bold text-slate-700">
+        <h1 className="text-3xl font-bold text-slate-800">
           Pest Library
         </h1>
 
@@ -101,13 +101,13 @@ const PestLibrary = () => {
 
       {/* SEARCH */}
       <div className="bg-white p-4 rounded-2xl shadow-sm">
-
         <input
           type="text"
           placeholder="Search pests..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full border border-slate-200 rounded-xl p-3 outline-none focus:border-green-500"
+
+          className="w-full border border-slate-200 rounded-xl p-3 outline-none focus:border-slate-500 transition-colors"
         />
       </div>
 
@@ -131,9 +131,8 @@ const PestLibrary = () => {
             <div className="p-5 space-y-4">
 
               <div className="flex items-start justify-between">
-
                 <div>
-                  <h2 className="text-xl font-bold text-slate-700">
+                  <h2 className="text-xl font-bold text-slate-800">
                     {pest.name}
                   </h2>
 
@@ -144,25 +143,26 @@ const PestLibrary = () => {
 
                 <button
                   onClick={() => toggleFavorite(pest.id)}
-
                 >
-                  <Heart size={20} className={`flex justify-center items-center ml-4 cursor-pointer ${favorites.includes(pest.id) ? "fill-red-500" : "text-gray-400"}`} />
+                  <Heart size={20} className={`flex justify-center items-center ml-4 cursor-pointer ${favorites.includes(pest.id) ? "fill-red-500 text-red-500" : "text-gray-400"}`} />
                 </button>
               </div>
 
               {/* RISK */}
-              <span
-                className={`px-3 py-1 rounded-full text-xs font-semibold mb-4 ${getRiskStyles(
-                  pest.riskLevel
-                )}`}
-              >
-                {pest.riskLevel} Risk
-              </span>
+              <div className="block">
+                <span
+                  className={`px-3 py-1 rounded-full text-xs font-semibold ${getRiskStyles(
+                    pest.riskLevel
+                  )}`}
+                >
+                  {pest.riskLevel} Risk
+                </span>
+              </div>
 
-              {/* BUTTON */}
+              {/* BUTTON - Changed from Green to Slate Theme */}
               <button
                 onClick={() => setSelectedPest(pest)}
-                className="w-full bg-green-600 hover:bg-green-700 cursor-pointer my-4 transition text-white py-3 rounded-xl font-semibold"
+                className="w-full bg-slate-800 hover:bg-slate-900 cursor-pointer transition text-white py-3 rounded-xl font-semibold"
               >
                 View Details
               </button>
@@ -180,7 +180,7 @@ const PestLibrary = () => {
             {/* CLOSE */}
             <button
               onClick={() => setSelectedPest(null)}
-              className="absolute top-2 right-3 text-xl cursor-pointer"
+              className="absolute top-2 right-3 text-xl cursor-pointer text-slate-400 hover:text-slate-600 transition-colors"
             >
               ✕
             </button>
@@ -195,8 +195,7 @@ const PestLibrary = () => {
             <div className="mt-5 space-y-4">
 
               <div className="flex items-center justify-between">
-
-                <h2 className="text-2xl font-bold">
+                <h2 className="text-2xl font-bold text-slate-800">
                   {selectedPest.name}
                 </h2>
 
@@ -210,20 +209,18 @@ const PestLibrary = () => {
               </div>
 
               <div>
-                <h3 className="font-semibold mb-1">
+                <h3 className="font-semibold text-slate-800 mb-1">
                   Description
                 </h3>
-
                 <p className="text-gray-500 text-sm">
                   {selectedPest.description}
                 </p>
               </div>
 
               <div>
-                <h3 className="font-semibold mb-1">
+                <h3 className="font-semibold text-slate-800 mb-1">
                   Recommended Treatment
                 </h3>
-
                 <p className="text-gray-500 text-sm">
                   {selectedPest.treatment}
                 </p>
