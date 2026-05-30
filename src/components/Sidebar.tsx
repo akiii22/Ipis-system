@@ -4,35 +4,34 @@ import {
   History,
   Bug,
   LogOut,
-  User, // Successfully integrated for the Account page
+  User,
 } from "lucide-react";
 import { NavLink } from "react-router-dom";
 
 const Sidebar = () => {
-  // Navigation active style logic for desktop items
+  // Navigation active style logic for desktop items (added 'group', 'duration-200', and hover translations)
   const getNavClass = ({ isActive }: { isActive: boolean }) =>
-    `flex items-center gap-3 p-3 rounded-xl transition-all font-medium cursor-pointer ${
+    `group flex items-center gap-3 p-3 rounded-xl transition-all duration-200 font-medium cursor-pointer ${
       isActive
-        ? "bg-slate-800 text-white shadow-md"
-        : "text-slate-600 hover:bg-slate-100"
+        ? "bg-slate-800 text-white shadow-md shadow-slate-800/20 scale-[1.02]"
+        : "text-slate-600 hover:bg-slate-100 hover:translate-x-1 hover:text-slate-900"
     }`;
 
-  // Navigation active style logic for mobile items
+  // Navigation active style logic for mobile items (added transition scaling)
   const getMobileNavClass = ({ isActive }: { isActive: boolean }) =>
-    `flex flex-col items-center transition-colors cursor-pointer ${
-      isActive ? "text-slate-800 font-semibold" : "text-slate-400 hover:text-slate-600"
+    `flex flex-col items-center transition-all duration-200 cursor-pointer ${
+      isActive ? "text-slate-800 font-semibold scale-110" : "text-slate-400 hover:text-slate-600 hover:scale-105"
     }`;
 
   return (
     <>
       {/* DESKTOP SIDEBAR */}
-      <aside className="hidden md:flex w-64 bg-white shadow-xl flex-col p-6 h-screen sticky top-0">
+      <aside className="hidden md:flex w-64 bg-white shadow-xl flex-col p-6 h-screen sticky top-0 border-r border-slate-50">
         
-      <div className="mb-10 flex items-center gap-4">
-          
+        {/* BRAND BLOCK - Added 'group' to handle image animation */}
+        <div className="mb-10 flex items-center gap-4 group cursor-pointer select-none">
           {/* Logo Container */}
-          <div className="w-14 h-14 rounded-full overflow-hidden shadow-md border border-slate-200 shrink-0 bg-black flex items-center justify-center">
-            {/* Make sure to import your logo at the top, or use the correct path */}
+          <div className="w-14 h-14 rounded-full overflow-hidden shadow-sm border border-slate-200 shrink-0 bg-black flex items-center justify-center transition-transform duration-300 group-hover:scale-105 group-hover:rotate-3">
             <img 
               src="/Logo.jpg" 
               alt="I.P.I.S Logo" 
@@ -41,10 +40,10 @@ const Sidebar = () => {
           </div>
 
           <div>
-            <h1 className="text-2xl font-bold text-slate-800 tracking-wide">
+            <h1 className="text-2xl font-bold text-slate-800 tracking-wide transition-colors duration-200 group-hover:text-slate-900">
               I.P.I.S
             </h1>
-            <p className="text-xs text-gray-500 font-medium">
+            <p className="text-xs text-gray-500 font-medium tracking-tight">
               Pest Identification
             </p>
           </div>
@@ -53,41 +52,40 @@ const Sidebar = () => {
         {/* Desktop Navigation Link Stack */}
         <nav className="flex flex-col gap-2">
           <NavLink to="/dashboard" end className={getNavClass}>
-            <LayoutDashboard size={20} />
+            <LayoutDashboard size={20} className="transition-transform duration-200 group-hover:scale-110" />
             Dashboard
           </NavLink>
 
           <NavLink to="/dashboard/scanner" className={getNavClass}>
-            <ScanSearch size={20} />
+            <ScanSearch size={20} className="transition-transform duration-200 group-hover:scale-110 group-hover:rotate-6" />
             Scanner
           </NavLink>
 
           <NavLink to="/dashboard/history" className={getNavClass}>
-            <History size={20} />
+            <History size={20} className="transition-transform duration-200 group-hover:scale-110 group-hover:-rotate-6" />
             History
           </NavLink>
 
           <NavLink to="/dashboard/library" className={getNavClass}>
-            <Bug size={20} />
+            <Bug size={20} className="transition-transform duration-200 group-hover:scale-110" />
             Pest Library
           </NavLink>
 
-          {/* New Account Link */}
           <NavLink to="/dashboard/account" className={getNavClass}>
-            <User size={20} />
+            <User size={20} className="transition-transform duration-200 group-hover:scale-110" />
             Account
           </NavLink>
         </nav>
 
-        {/* Logout */}
-        <button className="mt-auto flex items-center gap-3 p-3 rounded-xl hover:bg-red-50 transition text-red-500 font-medium cursor-pointer">
-          <LogOut size={20} />
+        {/* Logout - Added 'group' and sliding exit micro-animation */}
+        <button className="group mt-auto flex items-center gap-3 p-3 rounded-xl hover:bg-red-50 transition-all duration-200 text-red-500 font-medium cursor-pointer hover:translate-x-1">
+          <LogOut size={20} className="transition-transform duration-200 group-hover:-translate-x-0.5" />
           Logout
         </button>
       </aside>
 
       {/* MOBILE BOTTOM NAV */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-100 shadow-xl flex justify-around items-center py-2.5 md:hidden z-50">
+      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-100 shadow-2xl flex justify-around items-center py-2.5 md:hidden z-50">
         <NavLink to="/dashboard" end className={getMobileNavClass}>
           <LayoutDashboard size={22} />
           <span className="text-[10px] mt-0.5">Home</span>
@@ -108,7 +106,6 @@ const Sidebar = () => {
           <span className="text-[10px] mt-0.5">Library</span>
         </NavLink>
 
-        {/* New Mobile Account Entry */}
         <NavLink to="/dashboard/account" className={getMobileNavClass}>
           <User size={22} />
           <span className="text-[10px] mt-0.5">Account</span>
