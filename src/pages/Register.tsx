@@ -1,7 +1,6 @@
 import { Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-// Imported type Variants to support your verbatimModuleSyntax rules safely
 import { motion, type Variants } from "framer-motion";
 
 const Register = () => {
@@ -9,8 +8,8 @@ const Register = () => {
 
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
@@ -53,119 +52,134 @@ const Register = () => {
   };
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-[#edf7e7] flex items-center justify-center px-4 py-10 select-none">
+    <div className="relative min-h-screen overflow-hidden bg-slate-950 flex items-center justify-center px-4 py-10 select-none">
       
-      {/* Background Blobs - Synced fluid animations matching Login */}
-      <div className="absolute w-80 h-80 bg-green-400 rounded-full blur-3xl opacity-40 left-20 top-40 animate-pulse duration-[4000ms]" />
-      <div className="absolute w-80 h-80 bg-lime-300 rounded-full blur-3xl opacity-50 right-20 top-50 animate-pulse duration-[6000ms] delay-75" />
-      <div className="absolute w-60 h-60 bg-green-300 rounded-full blur-3xl opacity-40 right-50 bottom-12 animate-pulse duration-[5000ms] delay-150" />
+      {/* Background Ambient Glows - Translucent dark platform accents matching Login */}
+      <div className="absolute w-[450px] h-[450px] bg-indigo-950/20 rounded-full blur-3xl opacity-60 -left-10 top-20 animate-pulse duration-[6000ms]" />
+      <div className="absolute w-[400px] h-[400px] bg-slate-900/40 rounded-full blur-3xl opacity-50 -right-10 bottom-20 animate-pulse duration-[5000ms] delay-150" />
 
       {/* GLASS CARD CONTAINER */}
       <motion.div
         variants={containerVariants}
         initial="hidden"
         animate="visible"
-        className="relative w-full max-w-md backdrop-blur-xl bg-white/40 border border-white/60 rounded-[40px] shadow-2xl p-10"
+        className="relative w-full max-w-md backdrop-blur-xl bg-slate-950/40 border border-slate-800/80 rounded-[32px] shadow-2xl p-8 md:p-10"
       >
 
         {/* TITLE */}
         <motion.div variants={itemVariants} className="text-center mb-10">
-          <h1 className="text-4xl font-black text-slate-700 tracking-wider">
-            REGISTER
+          <h1 className="text-3xl font-extrabold text-slate-100 tracking-tight">
+            Create Account
           </h1>
-          <p className="mt-3 text-xs text-slate-500 font-semibold uppercase tracking-widest">
+          <p className="mt-2 text-xs text-slate-400 font-medium uppercase tracking-wider">
             Create your I.P.I.S account
           </p>
         </motion.div>
 
         {/* FORM */}
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-5">
 
           {/* Username */}
-          <motion.div variants={itemVariants} className="relative group">
+          <motion.div variants={itemVariants} className="space-y-2">
+            <label className="text-xs font-bold text-slate-400 uppercase tracking-wider block">
+              Username
+            </label>
             <input
               type="text"
-              placeholder="Username"
+              placeholder="johndoe"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              className="w-full bg-transparent border-b-2 border-slate-300 py-2 outline-none text-slate-800 font-medium placeholder:text-slate-400 transition-all duration-300 focus:border-slate-700 focus:-translate-y-0.5"
+              className="w-full border border-slate-800 rounded-xl p-3 outline-none focus:border-slate-600 transition-colors text-slate-200 bg-slate-950/50 font-medium placeholder-slate-700 text-sm"
               required
             />
           </motion.div>
 
           {/* Email */}
-          <motion.div variants={itemVariants} className="relative group">
+          <motion.div variants={itemVariants} className="space-y-2">
+            <label className="text-xs font-bold text-slate-400 uppercase tracking-wider block">
+              Email Address
+            </label>
             <input
               type="email"
-              placeholder="Email"
+              placeholder="name@example.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full bg-transparent border-b-2 border-slate-300 py-2 outline-none text-slate-800 font-medium placeholder:text-slate-400 transition-all duration-300 focus:border-slate-700 focus:-translate-y-0.5"
+              className="w-full border border-slate-800 rounded-xl p-3 outline-none focus:border-slate-600 transition-colors text-slate-200 bg-slate-950/50 font-medium placeholder-slate-700 text-sm"
               required
             />
           </motion.div>
 
           {/* Password */}
-          <motion.div variants={itemVariants} className="relative flex items-center group">
-            <input
-              type={showPassword ? "text" : "password"}
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full bg-transparent border-b-2 border-slate-300 py-2 pr-10 outline-none text-slate-800 font-medium placeholder:text-slate-400 transition-all duration-300 focus:border-slate-700 focus:-translate-y-0.5"
-              required
-            />
-            <motion.button
-              type="button"
-              whileTap={{ scale: 0.8 }}
-              onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-2 bottom-2.5 text-slate-400 hover:text-slate-600 transition-all duration-200 cursor-pointer"
-            >
-              {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-            </motion.button>
+          <motion.div variants={itemVariants} className="space-y-2">
+            <label className="text-xs font-bold text-slate-400 uppercase tracking-wider block">
+              Password
+            </label>
+            <div className="relative flex items-center">
+              <input
+                type={showPassword ? "text" : "password"}
+                placeholder="••••••••"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full border border-slate-800 rounded-xl p-3 pr-11 outline-none focus:border-slate-600 transition-colors text-slate-200 bg-slate-950/50 font-medium placeholder-slate-700 text-sm"
+                required
+              />
+              <motion.button
+                type="button"
+                whileTap={{ scale: 0.85 }}
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3.5 text-slate-500 hover:text-slate-400 transition-colors cursor-pointer"
+              >
+                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              </motion.button>
+            </div>
           </motion.div>
 
           {/* Confirm Password */}
-          <motion.div variants={itemVariants} className="relative flex items-center group">
-            <input
-              type={showConfirmPassword ? "text" : "password"}
-              placeholder="Confirm Password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              className="w-full bg-transparent border-b-2 border-slate-300 py-2 pr-10 outline-none text-slate-800 font-medium placeholder:text-slate-400 transition-all duration-300 focus:border-slate-700 focus:-translate-y-0.5"
-              required
-            />
-            <motion.button
-              type="button"
-              whileTap={{ scale: 0.8 }}
-              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-              className="absolute right-2 bottom-2.5 text-slate-400 hover:text-slate-600 transition-all duration-200 active:scale-75 cursor-pointer"
-            >
-              {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-            </motion.button>
+          <motion.div variants={itemVariants} className="space-y-2">
+            <label className="text-xs font-bold text-slate-400 uppercase tracking-wider block">
+              Confirm Password
+            </label>
+            <div className="relative flex items-center">
+              <input
+                type={showConfirmPassword ? "text" : "password"}
+                placeholder="••••••••"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                className="w-full border border-slate-800 rounded-xl p-3 pr-11 outline-none focus:border-slate-600 transition-colors text-slate-200 bg-slate-950/50 font-medium placeholder-slate-700 text-sm"
+                required
+              />
+              <motion.button
+                type="button"
+                whileTap={{ scale: 0.85 }}
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                className="absolute right-3.5 text-slate-500 hover:text-slate-400 transition-colors cursor-pointer"
+              >
+                {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              </motion.button>
+            </div>
           </motion.div>
 
           {/* Submit Button */}
-          <motion.div variants={itemVariants}>
+          <motion.div variants={itemVariants} className="pt-3">
             <motion.button
               type="submit"
-              whileHover={{ scale: 1.015, y: -1 }}
-              whileTap={{ scale: 0.985, y: 0 }}
-              className="w-full bg-slate-800 hover:bg-slate-900 text-white py-4 rounded-2xl font-bold text-lg shadow-lg shadow-slate-900/10 hover:shadow-xl hover:shadow-slate-900/20 transition-all duration-200 cursor-pointer tracking-wider"
+              whileHover={{ scale: 1.01 }}
+              whileTap={{ scale: 0.99 }}
+              className="w-full bg-slate-800 border border-slate-700/40 hover:bg-slate-750 text-slate-200 py-3.5 rounded-xl font-bold text-base shadow-md transition-colors cursor-pointer tracking-wide"
             >
-              CREATE ACCOUNT
+              Create Account
             </motion.button>
           </motion.div>
         </form>
 
         {/* Footer */}
-        <motion.p variants={itemVariants} className="text-center text-sm text-slate-500 mt-8 font-medium">
+        <motion.p variants={itemVariants} className="text-center text-sm text-slate-400 mt-8 font-medium">
           Already have an account?
           <Link
             to="/"
-            className="ml-2 text-slate-700 font-bold hover:text-slate-900 hover:underline transition-colors duration-200"
+            className="ml-2 text-indigo-400 font-bold hover:text-indigo-300 transition-colors duration-200"
           >
-            Login
+            Sign In
           </Link>
         </motion.p>
       </motion.div>

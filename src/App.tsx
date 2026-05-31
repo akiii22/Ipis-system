@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
-// 1. Import Framer Motion features
+
 import { motion, AnimatePresence, type Variants } from "framer-motion";
 
 import LogIn from "./pages/LogIn";
@@ -24,7 +24,7 @@ const App = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  // 2. Define framer motion variants for the letter reveal sequence
+  // Define framer motion variants for the letter reveal sequence
   const textContainerVariants: Variants = {
     animate: {
       transition: {
@@ -55,15 +55,18 @@ const App = () => {
               opacity: 0,
               transition: { duration: 0.4, ease: "easeInOut" } 
             }}
-            // Uses your custom soft-green system color variable for a perfect blend
-            className="fixed inset-0 bg-[#edf7e7] flex flex-col items-center justify-center z-50 select-none"
+            // Updated to matching slate-950 dark entry layer
+            className="fixed inset-0 bg-slate-950 flex flex-col items-center justify-center z-50 select-none"
           >
+            {/* Ambient Deep Glow for Premium Presentation */}
+            <div className="absolute w-80 h-80 bg-indigo-950/20 rounded-full blur-3xl opacity-60 animate-pulse duration-[4000ms]" />
+
             {/* STAGGERED TEXT CONTAINER */}
             <motion.div
               variants={textContainerVariants}
               initial="initial"
               animate="animate"
-              className="flex items-center text-5xl font-black text-slate-800 tracking-wide"
+              className="relative flex items-center text-5xl font-black text-slate-100 tracking-wide z-10"
             >
               {"I.P.I.S".split("").map((char, index) => (
                 <motion.span key={index} variants={letterVariants}>
@@ -77,7 +80,7 @@ const App = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.8, duration: 0.5 }}
-              className="mt-4 text-xs tracking-widest font-bold text-slate-400 uppercase"
+              className="relative mt-4 text-xs tracking-widest font-bold text-slate-400 uppercase z-10"
             >
               Intelligent Pest Identification System
             </motion.p>
@@ -87,7 +90,7 @@ const App = () => {
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.9, duration: 0.4 }}
-              className="w-24 h-1 bg-slate-200/80 rounded-full mt-8 overflow-hidden relative"
+              className="relative w-24 h-1 bg-slate-900 rounded-full mt-8 overflow-hidden border border-slate-800/40 z-10"
             >
               <motion.div
                 initial={{ left: "-100%" }}
@@ -97,7 +100,7 @@ const App = () => {
                   duration: 1.4, 
                   ease: "easeInOut" 
                 }}
-                className="absolute top-0 bottom-0 w-1/2 bg-slate-700 rounded-full shadow-xs"
+                className="absolute top-0 bottom-0 w-1/2 bg-indigo-500 rounded-full shadow-[0_0_8px_rgba(99,102,241,0.6)]"
               />
             </motion.div>
           </motion.div>

@@ -25,7 +25,7 @@ const DashboardLayout = () => {
   };
 
   return (
-    <div className="h-screen bg-[#edf7e7] flex overflow-hidden select-none">
+    <div className="h-screen bg-gray-900 flex overflow-hidden select-none">
       
       {/* Sidebar */}
       <Sidebar />
