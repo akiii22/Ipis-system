@@ -79,7 +79,8 @@ const Sidebar = () => {
 
         {/* Logout - Added 'group' and sliding exit micro-animation */}
         <button className="group mt-auto flex items-center gap-3 p-3 rounded-xl hover:bg-red-50 transition-all duration-200 text-red-500 font-medium cursor-pointer hover:translate-x-1">
-          <LogOut size={20} className="transition-transform duration-200 group-hover:-translate-x-0.5" />
+          <NavLink to="/">
+          <LogOut size={20} className="transition-transform duration-200 group-hover:-translate-x-0.5" /></NavLink>
           Logout
         </button>
       </aside>

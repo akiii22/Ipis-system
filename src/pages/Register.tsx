@@ -1,6 +1,8 @@
 import { Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+// Imported type Variants to support your verbatimModuleSyntax rules safely
+import { motion, type Variants } from "framer-motion";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -23,6 +25,33 @@ const Register = () => {
     navigate("/");
   };
 
+  // Orchestrates the main container and entry cascade
+  const containerVariants: Variants = {
+    hidden: { opacity: 0, y: 40, scale: 0.98 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      transition: {
+        type: "spring",
+        stiffness: 80,
+        damping: 16,
+        staggerChildren: 0.07, // Staggers input reveals sequentially
+        delayChildren: 0.05,
+      },
+    },
+  };
+
+  // Handles the slide-up animation for each inner form element
+  const itemVariants: Variants = {
+    hidden: { opacity: 0, y: 15 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { type: "spring", stiffness: 120, damping: 14 },
+    },
+  };
+
   return (
     <div className="relative min-h-screen overflow-hidden bg-[#edf7e7] flex items-center justify-center px-4 py-10 select-none">
       
@@ -31,24 +60,29 @@ const Register = () => {
       <div className="absolute w-80 h-80 bg-lime-300 rounded-full blur-3xl opacity-50 right-20 top-50 animate-pulse duration-[6000ms] delay-75" />
       <div className="absolute w-60 h-60 bg-green-300 rounded-full blur-3xl opacity-40 right-50 bottom-12 animate-pulse duration-[5000ms] delay-150" />
 
-      {/* Glass Card - Smooth component slide and pop */}
-      <div className="relative w-full max-w-md backdrop-blur-xl bg-white/40 border border-white/60 rounded-[40px] shadow-2xl p-10 animate-in fade-in slide-in-from-bottom-6 zoom-in-95 duration-500 ease-out">
+      {/* GLASS CARD CONTAINER */}
+      <motion.div
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+        className="relative w-full max-w-md backdrop-blur-xl bg-white/40 border border-white/60 rounded-[40px] shadow-2xl p-10"
+      >
 
-        {/* Title */}
-        <div className="text-center mb-10">
+        {/* TITLE */}
+        <motion.div variants={itemVariants} className="text-center mb-10">
           <h1 className="text-4xl font-black text-slate-700 tracking-wider">
             REGISTER
           </h1>
           <p className="mt-3 text-xs text-slate-500 font-semibold uppercase tracking-widest">
             Create your I.P.I.S account
           </p>
-        </div>
+        </motion.div>
 
-        {/* Form */}
+        {/* FORM */}
         <form onSubmit={handleSubmit} className="space-y-6">
 
           {/* Username */}
-          <div className="relative group">
+          <motion.div variants={itemVariants} className="relative group">
             <input
               type="text"
               placeholder="Username"
@@ -57,10 +91,10 @@ const Register = () => {
               className="w-full bg-transparent border-b-2 border-slate-300 py-2 outline-none text-slate-800 font-medium placeholder:text-slate-400 transition-all duration-300 focus:border-slate-700 focus:-translate-y-0.5"
               required
             />
-          </div>
+          </motion.div>
 
           {/* Email */}
-          <div className="relative group">
+          <motion.div variants={itemVariants} className="relative group">
             <input
               type="email"
               placeholder="Email"
@@ -69,10 +103,10 @@ const Register = () => {
               className="w-full bg-transparent border-b-2 border-slate-300 py-2 outline-none text-slate-800 font-medium placeholder:text-slate-400 transition-all duration-300 focus:border-slate-700 focus:-translate-y-0.5"
               required
             />
-          </div>
+          </motion.div>
 
           {/* Password */}
-          <div className="relative flex items-center group">
+          <motion.div variants={itemVariants} className="relative flex items-center group">
             <input
               type={showPassword ? "text" : "password"}
               placeholder="Password"
@@ -81,17 +115,18 @@ const Register = () => {
               className="w-full bg-transparent border-b-2 border-slate-300 py-2 pr-10 outline-none text-slate-800 font-medium placeholder:text-slate-400 transition-all duration-300 focus:border-slate-700 focus:-translate-y-0.5"
               required
             />
-            <button
+            <motion.button
               type="button"
+              whileTap={{ scale: 0.8 }}
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-2 bottom-2.5 text-slate-400 hover:text-slate-600 transition-all duration-200 active:scale-75 cursor-pointer"
+              className="absolute right-2 bottom-2.5 text-slate-400 hover:text-slate-600 transition-all duration-200 cursor-pointer"
             >
               {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-            </button>
-          </div>
+            </motion.button>
+          </motion.div>
 
           {/* Confirm Password */}
-          <div className="relative flex items-center group">
+          <motion.div variants={itemVariants} className="relative flex items-center group">
             <input
               type={showConfirmPassword ? "text" : "password"}
               placeholder="Confirm Password"
@@ -100,26 +135,31 @@ const Register = () => {
               className="w-full bg-transparent border-b-2 border-slate-300 py-2 pr-10 outline-none text-slate-800 font-medium placeholder:text-slate-400 transition-all duration-300 focus:border-slate-700 focus:-translate-y-0.5"
               required
             />
-            <button
+            <motion.button
               type="button"
+              whileTap={{ scale: 0.8 }}
               onClick={() => setShowConfirmPassword(!showConfirmPassword)}
               className="absolute right-2 bottom-2.5 text-slate-400 hover:text-slate-600 transition-all duration-200 active:scale-75 cursor-pointer"
             >
               {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-            </button>
-          </div>
+            </motion.button>
+          </motion.div>
 
           {/* Submit Button */}
-          <button
-            type="submit"
-            className="w-full bg-slate-800 hover:bg-slate-900 text-white py-4 rounded-2xl font-bold text-lg shadow-lg shadow-slate-900/10 hover:shadow-xl hover:shadow-slate-900/20 hover:scale-[1.01] active:scale-[0.99] transition-all duration-200 cursor-pointer tracking-wider"
-          >
-            CREATE ACCOUNT
-          </button>
+          <motion.div variants={itemVariants}>
+            <motion.button
+              type="submit"
+              whileHover={{ scale: 1.015, y: -1 }}
+              whileTap={{ scale: 0.985, y: 0 }}
+              className="w-full bg-slate-800 hover:bg-slate-900 text-white py-4 rounded-2xl font-bold text-lg shadow-lg shadow-slate-900/10 hover:shadow-xl hover:shadow-slate-900/20 transition-all duration-200 cursor-pointer tracking-wider"
+            >
+              CREATE ACCOUNT
+            </motion.button>
+          </motion.div>
         </form>
 
         {/* Footer */}
-        <p className="text-center text-sm text-slate-500 mt-8 font-medium">
+        <motion.p variants={itemVariants} className="text-center text-sm text-slate-500 mt-8 font-medium">
           Already have an account?
           <Link
             to="/"
@@ -127,8 +167,8 @@ const Register = () => {
           >
             Login
           </Link>
-        </p>
-      </div>
+        </motion.p>
+      </motion.div>
     </div>
   );
 };
