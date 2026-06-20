@@ -4,7 +4,7 @@ import { motion, AnimatePresence, type Variants } from "framer-motion";
 import { toast } from "react-toastify";
 
 const ROBOFLOW_API_KEY = import.meta.env.VITE_ROBOFLOW_API_KEY;
-const MODEL_ENDPOINT = import.meta.env.VITE_MODEL_ENDPOINT;
+const MODEL_ENDPOINT = "pest-detection-system-csmns/1";
 
 type Prediction = {
   class: string;
