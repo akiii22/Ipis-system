@@ -99,7 +99,7 @@ const Scanner = () => {
     try {
       // Swapped domain configuration to standard browser endpoint handling CORS reliably
       const response = await fetch(
-        `https://detect.roboflow.com/${MODEL_ENDPOINT}?api_key=${ROBOFLOW_API_KEY}`,
+        `https://serverless.roboflow.com/${MODEL_ENDPOINT}?api_key=${ROBOFLOW_API_KEY}`,
         {
           method: "POST",
           headers: {
