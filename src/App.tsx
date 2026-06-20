@@ -1,8 +1,7 @@
 import { useState, useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
-
 import { motion, AnimatePresence, type Variants } from "framer-motion";
-
+import { supabase } from "./lib/supabase";
 import LogIn from "./pages/LogIn";
 import Register from "./pages/Register";
 import DashBoardLayout from "./layouts/DashBoardLayout";
@@ -11,17 +10,26 @@ import Scanner from "./pages/Scanner";
 import History from "./pages/History";
 import PestLibrary from "./pages/PestLibrary";
 import Account from "./pages/Account";
-
+import ProtectedRoute from "./routes/ProtectedRoute";
+import {ToastContainer} from "react-toastify";
+import "react-toastify"
 const App = () => {
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    // Simulates the initial asset bundle/auth handshake loading time
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 2400); // 2.4 seconds loading window
+useEffect(() => {
+    // Connect initial asset loader to the real Supabase session evaluation
+    const initializeAuth = async () => {
+      try {
+        await supabase.auth.getSession();
+      } catch (err) {
+        console.error("Auth initialization error:", err);
+      } finally {
+        // Drop the splash screen safely after the handshake completes
+        setIsLoading(false);
+      }
+    };
 
-    return () => clearTimeout(timer);
+    initializeAuth();
   }, []);
 
   // Define framer motion variants for the letter reveal sequence
@@ -108,19 +116,36 @@ const App = () => {
       </AnimatePresence>
 
       {/* ROUTES WRAPPER - Elements only populate layout context once loader drops out */}
-      {!isLoading && (
+     {!isLoading && (
         <Routes>
+          {/* Public Routes */}
           <Route path="/" element={<LogIn />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/dashboard" element={<DashBoardLayout />}>
-            <Route index element={<DashBoard />} />
-            <Route path="scanner" element={<Scanner />} />
-            <Route path="history" element={<History />} />
-            <Route path="library" element={<PestLibrary />} />
-            <Route path="account" element={<Account />} />
+          
+          {/* Secure System Routes Layer */}
+          <Route element={<ProtectedRoute />}>
+            <Route path="/dashboard" element={<DashBoardLayout />}>
+              <Route index element={<DashBoard />} />
+              <Route path="scanner" element={<Scanner />} />
+              <Route path="history" element={<History />} />
+              <Route path="library" element={<PestLibrary />} />
+              <Route path="account" element={<Account />} />
+            </Route>
           </Route>
         </Routes>
       )}
+      <ToastContainer
+        position="top-center"
+        autoClose={4000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+      />
     </>
   );
 };

@@ -2,8 +2,8 @@ import { useRef, useState } from "react";
 import { Loader2, AlertCircle, Upload, RefreshCw, Camera } from "lucide-react";
 import { motion, AnimatePresence, type Variants } from "framer-motion";
 
-const ROBOFLOW_API_KEY = "XKEYk9k6TUKPjLCk4yrp"; 
-const MODEL_ENDPOINT = "pest-detection-system-csmns/1"
+const ROBOFLOW_API_KEY = import.meta.env.VITE_ROBOFLOW_API_KEY;
+const MODEL_ENDPOINT = import.meta.env.VITE_MODEL_ENDPOINT;
 
 
 type Prediction = {

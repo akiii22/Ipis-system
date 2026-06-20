@@ -1,21 +1,20 @@
 import { Eye, EyeOff } from "lucide-react";
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-// Imported type Variants to support verbatimModuleSyntax configuration safely
+import {useAuthLogin} from "../hooks/useAuthLogin";
+import { Link} from "react-router-dom";
 import { motion, type Variants } from "framer-motion";
 
+
 const LogIn = () => {
-  const navigate = useNavigate();
-
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    console.log(email, password);
-    navigate("/dashboard");
-  };
+   const {
+    email,
+    setEmail,
+    password,
+    setPassword,
+    showPassword,
+    setShowPassword,
+    loading,
+    handleLoginSubmit
+  } = useAuthLogin();
 
   // Animation Variants Setup
   const containerVariants: Variants = {
@@ -46,7 +45,7 @@ const LogIn = () => {
   return (
     <div className="relative min-h-screen overflow-hidden bg-slate-950 flex items-center justify-center px-4 select-none">
       
-      {/* Background Ambient Glows - Translucent dark platform accents */}
+      {/* Background Ambient Glows */}
       <div className="absolute w-[450px] h-[450px] bg-indigo-950/20 rounded-full blur-3xl opacity-60 -left-10 top-20 animate-pulse duration-[6000ms]" />
       <div className="absolute w-[400px] h-[400px] bg-slate-900/40 rounded-full blur-3xl opacity-50 -right-10 bottom-20 animate-pulse duration-[5000ms] delay-150" />
 
@@ -69,7 +68,7 @@ const LogIn = () => {
         </motion.div>
 
         {/* FORM CONTAINER */}
-        <form onSubmit={handleSubmit} className="space-y-5">
+        <form onSubmit={handleLoginSubmit} className="space-y-5">
           
           {/* Email Input */}
           <motion.div variants={itemVariants} className="space-y-2">
@@ -82,6 +81,7 @@ const LogIn = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="w-full border border-slate-800 rounded-xl p-3 outline-none focus:border-slate-600 transition-colors text-slate-200 bg-slate-950/50 font-medium placeholder-slate-700 text-sm"
+              disabled={loading}
               required
             />
           </motion.div>
@@ -98,10 +98,10 @@ const LogIn = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full border border-slate-800 rounded-xl p-3 pr-11 outline-none focus:border-slate-600 transition-colors text-slate-200 bg-slate-950/50 font-medium placeholder-slate-700 text-sm"
+                disabled={loading}
                 required
               />
               
-              {/* Eye Toggle Icon with native gesture compression */}
               <motion.button
                 type="button"
                 whileTap={{ scale: 0.85 }}
@@ -117,11 +117,12 @@ const LogIn = () => {
           <motion.div variants={itemVariants} className="pt-3">
             <motion.button
               type="submit"
-              whileHover={{ scale: 1.01 }}
-              whileTap={{ scale: 0.99 }}
-              className="w-full bg-slate-800 border border-slate-700/40 hover:bg-slate-750 text-slate-200 py-3.5 rounded-xl font-bold text-base shadow-md transition-colors cursor-pointer tracking-wide"
+              disabled={loading}
+              whileHover={{ scale: loading ? 1 : 1.01 }}
+              whileTap={{ scale: loading ? 1 : 0.99 }}
+              className="w-full bg-slate-800 border border-slate-700/40 hover:bg-slate-750 text-slate-200 py-3.5 rounded-xl font-bold text-base shadow-md transition-colors cursor-pointer tracking-wide disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Sign In to Dashboard
+              {loading ? "Signing In..." : "Sign In to Dashboard"}
             </motion.button>
           </motion.div>
         </form>

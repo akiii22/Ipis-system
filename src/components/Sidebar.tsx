@@ -8,12 +8,27 @@ import {
 } from "lucide-react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-
-// Create a motion-enabled NavLink component for smooth framer gestures
+import { supabase } from "../lib/supabase"; // Import Supabase instance
+import {toast} from "react-toastify";
 const MotionNavLink = motion(NavLink);
 
 const Sidebar = () => {
   const navigate = useNavigate();
+
+  // Handle actual session clearance
+  const handleLogout = async () => {
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
+      
+      // Clear route state and return to login
+      toast.success("Logged out successfully!");
+      navigate("/", { replace: true });
+    } catch (error: unknown) {
+      console.error("Sidebar logout error:", error);
+      toast.error((error as { message?: string })?.message || "Failed to sign out securely.");
+    }
+  };
 
   // Clean, dark theme classes for desktop items
   const getNavClass = ({ isActive }: { isActive: boolean }) =>
@@ -39,7 +54,6 @@ const Sidebar = () => {
           onClick={() => navigate("/dashboard")}
           className="mb-10 flex items-center gap-4 group cursor-pointer select-none"
         >
-          {/* Logo Container with micro-rotation */}
           <div className="w-12 h-12 rounded-full overflow-hidden shadow-md border border-slate-800 shrink-0 bg-slate-950 flex items-center justify-center transition-transform duration-300 group-hover:scale-105 group-hover:rotate-3">
             <img 
               src="/Logo.jpg" 
@@ -114,7 +128,7 @@ const Sidebar = () => {
 
         {/* Logout Button */}
         <motion.button 
-          onClick={() => navigate("/")}
+          onClick={handleLogout} // Hooked to real auth trigger function
           whileHover={{ x: 4 }}
           whileTap={{ scale: 0.98 }}
           className="group mt-auto flex items-center gap-3 p-3 rounded-xl hover:bg-red-950/30 transition-colors duration-200 text-red-400 font-medium cursor-pointer text-sm"
