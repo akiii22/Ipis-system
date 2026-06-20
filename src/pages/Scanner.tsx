@@ -3,7 +3,7 @@ import { Loader2, AlertCircle, Upload, RefreshCw, Camera } from "lucide-react";
 import { motion, AnimatePresence, type Variants } from "framer-motion";
 
 const ROBOFLOW_API_KEY = "XKEYk9k6TUKPjLCk4yrp"; 
-const MODEL_ENDPOINT = "ipis-cockroach-detector-iejse/1"
+const MODEL_ENDPOINT = "pest-detection-system-csmns/1"
 
 
 type Prediction = {
@@ -15,7 +15,63 @@ type Prediction = {
   height: number;
 };
 
-const CONFIDENCE_THRESHOLD = 0.85;
+const CONFIDENCE_THRESHOLD = 0.7;
+
+const pestInfo = {
+  ants: {
+    risk: "Medium",
+    recommendation:
+      "Remove food crumbs, clean surfaces regularly, and seal entry points.",
+  },
+
+  asphids: {
+    risk: "Medium",
+    recommendation:
+      "Use insecticidal soap, remove affected leaves, and monitor plants regularly.",
+  },
+
+  beetle: {
+    risk: "Medium",
+    recommendation:
+      "Inspect crops and storage areas, remove infested materials, and use approved pest controls.",
+  },
+
+  catterpillar: {
+    risk: "Medium",
+    recommendation:
+      "Inspect plants frequently and remove caterpillars before they damage crops.",
+  },
+
+  cockroach: {
+    risk: "High",
+    recommendation:
+      "Maintain sanitation, seal food containers, remove standing water, and use traps if necessary.",
+  },
+
+  earthworm: {
+    risk: "Low",
+    recommendation:
+      "Earthworms are beneficial to soil health and generally do not require treatment.",
+  },
+
+  mosquitio: {
+    risk: "High",
+    recommendation:
+      "Remove stagnant water, clean drainage areas, and use mosquito repellents.",
+  },
+
+  slu: {
+    risk: "Medium",
+    recommendation:
+      "Reduce moisture, remove hiding spots, and protect plants from feeding damage.",
+  },
+
+  termite: {
+    risk: "High",
+    recommendation:
+      "Inspect wooden structures immediately and seek professional pest control if infestation is suspected.",
+  },
+};
 
 
 const Scanner = () => {
@@ -67,7 +123,7 @@ const Scanner = () => {
       const data = await response.json();
 
       if (!data.predictions || data.predictions.length === 0) {
-        setError("No cockroach detected.");
+        setError("No pest detected.");
         return;
       }
 
@@ -77,7 +133,7 @@ const Scanner = () => {
 
       if (bestPrediction.confidence < CONFIDENCE_THRESHOLD) {
         setError(
-          `No cockroach detected. Confidence too low (${Math.round(
+          `No pest detected. Confidence too low (${Math.round(
             bestPrediction.confidence * 100
           )}%).`
         );
@@ -123,6 +179,10 @@ const Scanner = () => {
     exit: { opacity: 0, y: -8, transition: { duration: 0.15 } }
   };
 
+  const pestData =
+  prediction &&
+  pestInfo[prediction.class.toLowerCase() as keyof typeof pestInfo];
+
   return (
     <div className="space-y-6 max-w-2xl mx-auto pb-12 select-none">
       
@@ -132,7 +192,7 @@ const Scanner = () => {
           Pest Scanner
         </h1>
         <p className="text-slate-400 mt-1.5 text-sm font-medium">
-          Upload or capture a cockroach image for rapid system detection.
+          Upload or capture a pest image for rapid system detection.
         </p>
       </div>
 
@@ -281,7 +341,9 @@ const Scanner = () => {
             >
               <div className="flex justify-between border-b border-slate-800/60 pb-2.5 text-sm font-medium">
                 <span className="text-slate-400">Detected Classification</span>
-                <span className="font-bold text-slate-200">Cockroach</span>
+                <span className="font-bold text-slate-200 capitalize">
+  {prediction.class}
+</span>
               </div>
 
               <div className="flex justify-between border-b border-slate-800/60 pb-2.5 text-sm font-medium">
@@ -293,22 +355,33 @@ const Scanner = () => {
 
               <div className="flex justify-between border-b border-slate-800/60 pb-2.5 text-sm font-medium">
                 <span className="text-slate-400">Risk Severity</span>
-                <span className="px-3 py-0.5 rounded-full bg-red-950/40 text-red-400 border border-red-900/40 text-xs font-bold">
-                  High
-                </span>
+                <span
+  className={`px-3 py-0.5 rounded-full text-xs font-bold border ${
+    pestData?.risk === "High"
+      ? "bg-red-950/40 text-red-400 border-red-900/40"
+      : pestData?.risk === "Medium"
+      ? "bg-amber-950/40 text-amber-400 border-amber-900/40"
+      : "bg-emerald-950/40 text-emerald-400 border-emerald-900/40"
+  }`}
+>
+  {pestData?.risk || "Unknown"}
+</span>
               </div>
 
               <div className="pt-1.5">
                 <p className="text-xs text-slate-400 font-bold uppercase tracking-wider mb-1">
                   Diagnostic Log
                 </p>
-                <p className="text-sm text-slate-300 leading-relaxed font-medium">
-                  A cockroach specimen has been successfully identified within the telemetry array canvas with a threshold of{" "}
-                  <strong className="text-slate-100">
-                    {Math.round(prediction.confidence * 100)}%
-                  </strong>{" "}
-                  certainty context.
-                </p>
+               <p className="text-sm text-slate-300 leading-relaxed font-medium">
+  The system detected a{" "}
+  <strong className="capitalize text-slate-100">
+    {prediction.class}
+  </strong>{" "}
+  with a confidence score of{" "}
+  <strong className="text-slate-100">
+    {Math.round(prediction.confidence * 100)}%
+  </strong>.
+</p>
               </div>
             </motion.div>
           )}
