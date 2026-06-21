@@ -1,68 +1,34 @@
-import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { User, LogOut, ChevronDown } from "lucide-react";
+import { User, LogOut, ChevronDown, Loader2 } from "lucide-react";
 import { motion, AnimatePresence, type Variants } from "framer-motion";
-import { supabase } from "../lib/supabase"; // Import Supabase instance
-import {toast} from "react-toastify";
+import { useNavbar } from "../hooks/useNavbar"; // Import Hook
+
 const Navbar = () => {
   const navigate = useNavigate();
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
+  
+  // Extract state values and triggers directly from hook
+  const {
+    dropdownOpen,
+    setDropdownOpen,
+    dropdownRef,
+    email,
+    username,
+    avatarUrl,
+    fetchingUser,
+    welcomeName,
+    userInitial,
+    handleLogout,
+  } = useNavbar();
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setDropdownOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
-
-  // Handle actual session clearance
-  const handleLogout = async () => {
-    setDropdownOpen(false);
-    try {
-      const { error } = await supabase.auth.signOut();
-      if (error) throw error;
-      
-      // Note: The ProtectedRoute's onAuthStateChange listener will 
-      // automatically catch this event and redirect the user to "/".
-      // We explicitly call navigate just to double-ensure execution flow control.
-      toast.success("Logged out successfully!");
-      navigate("/", { replace: true });
-    } catch (error: unknown) {
-      console.error("Logout execution error:", error);
-      toast.error((error as { message?: string })?.message || "Failed to sign out securely.");
-    }
-  };
-
-  // Smooth spring dropdown variants
   const dropdownVariants: Variants = {
-    hidden: { 
-      opacity: 0, 
-      y: -8,
-      scale: 0.95
-    },
+    hidden: { opacity: 0, y: -8, scale: 0.95 },
     visible: { 
       opacity: 1, 
-      y: 0,
+      y: 0, 
       scale: 1,
-      transition: {
-        type: "spring",
-        stiffness: 150,
-        damping: 15
-      }
+      transition: { type: "spring", stiffness: 150, damping: 15 }
     },
-    exit: {
-      opacity: 0,
-      y: -6,
-      scale: 0.95,
-      transition: {
-        duration: 0.12,
-        ease: "easeIn"
-      }
-    }
+    exit: { opacity: 0, y: -6, scale: 0.95, transition: { duration: 0.12, ease: "easeIn" } }
   };
 
   return (
@@ -76,7 +42,7 @@ const Navbar = () => {
         >
           <img 
             src="/Logo.jpg"
-            alt="Transforming Lives Logo" 
+            alt="I.P.I.S Logo" 
             className="h-11 w-auto transition-transform duration-300 ease-out group-hover:scale-105"
           />
         </div>
@@ -87,8 +53,12 @@ const Navbar = () => {
           <h2 className="text-lg font-bold text-slate-100 leading-tight tracking-tight">
             Dashboard
           </h2>
-          <p className="text-xs text-slate-400 font-medium mt-0.5">
-            Welcome back, Alex
+          <p className="text-xs text-slate-400 font-medium mt-0.5 min-h-[16px] flex items-center gap-1.5">
+            {fetchingUser ? (
+              <Loader2 size={12} className="animate-spin text-slate-500" />
+            ) : (
+              `Welcome back, ${welcomeName}`
+            )}
           </p>
         </div>
       </div>
@@ -97,10 +67,15 @@ const Navbar = () => {
       <div className="relative" ref={dropdownRef}>
         <button 
           onClick={() => setDropdownOpen(!dropdownOpen)}
-          className="flex items-center gap-2.5 focus:outline-none group cursor-pointer"
+          disabled={fetchingUser}
+          className="flex items-center gap-2.5 focus:outline-none group cursor-pointer disabled:opacity-50"
         >
-          <div className="w-9 h-9 rounded-full bg-slate-800 hover:bg-slate-750 border border-slate-700/60 text-slate-200 flex items-center justify-center font-bold text-sm transition-colors duration-200 shadow-inner">
-            A
+          <div className="w-9 h-9 rounded-full bg-slate-800 hover:bg-slate-750 border border-slate-700/60 text-slate-200 flex items-center justify-center font-bold text-sm transition-colors duration-200 shadow-inner overflow-hidden">
+            {avatarUrl ? (
+              <img src={avatarUrl} alt="User profile navbar thumbnail" className="w-full h-full object-cover" />
+            ) : (
+              userInitial
+            )}
           </div>
           <ChevronDown 
             size={16} 
@@ -108,7 +83,7 @@ const Navbar = () => {
           />
         </button>
 
-        {/* DROPDOWN MENU */}
+        {/* DROPDOWN MENU CONTAINER */}
         <AnimatePresence>
           {dropdownOpen && (
             <motion.div 
@@ -120,8 +95,10 @@ const Navbar = () => {
             >
               <div className="px-4 py-2.5 border-b border-slate-800/60 mb-1.5">
                 <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Signed in as</p>
-                <p className="text-sm font-bold text-slate-200 truncate mt-0.5">Alex Mercer</p>
-                <p className="text-xs text-slate-400 truncate mt-0.5">alex.m@email.com</p>
+                <p className="text-sm font-bold text-slate-200 truncate mt-0.5">
+                  {username || "Specimen System User"}
+                </p>
+                <p className="text-xs text-slate-400 truncate mt-0.5">{email}</p>
               </div>
 
               <div className="px-1.5 space-y-0.5">
