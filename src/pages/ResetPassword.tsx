@@ -1,22 +1,19 @@
-import { Eye, EyeOff } from "lucide-react";
-import { useAuthLogin } from "../hooks/useAuthLogin";
-import { Link } from "react-router-dom";
+import { Eye, EyeOff, Lock } from "lucide-react";
+import { useResetPassword } from "../hooks/useResetPassword";
 import { motion, type Variants } from "framer-motion";
 
-const LogIn = () => {
+const ResetPassword = () => {
   const {
-    email,
-    setEmail,
-    password,
-    setPassword,
+    newPassword,
+    setNewPassword,
+    confirmPassword,
+    setConfirmPassword,
     showPassword,
     setShowPassword,
     loading,
-    handleLoginSubmit,
-    handleForgotPassword,
-  } = useAuthLogin();
+    handleResetPasswordSubmit,
+  } = useResetPassword();
 
-  // Animation Variants Setup
   const containerVariants: Variants = {
     hidden: { opacity: 0, y: 40, scale: 0.98 },
     visible: {
@@ -58,63 +55,36 @@ const LogIn = () => {
       >
         
         {/* TITLE SECTION */}
-        <motion.div variants={itemVariants} className="text-center mb-10">
-          <h1 className="text-3xl font-extrabold text-slate-100 tracking-tight">
-            Sign In
+        <motion.div variants={itemVariants} className="text-center mb-8">
+          <div className="mx-auto w-12 h-12 rounded-2xl bg-slate-900 border border-slate-800 flex items-center justify-center text-indigo-400 mb-4 shadow-inner">
+            <Lock size={22} />
+          </div>
+          <h1 className="text-2xl font-extrabold text-slate-100 tracking-tight">
+            Set New Password
           </h1>
-          <p className="mt-2 text-xs text-slate-400 font-medium uppercase tracking-wider">
-            Intelligent Pest Identification System
+          <p className="mt-2 text-xs text-slate-400 font-medium">
+            Please enter and confirm your new account password below.
           </p>
         </motion.div>
 
         {/* FORM CONTAINER */}
-        <form onSubmit={handleLoginSubmit} className="space-y-5">
+        <form onSubmit={handleResetPasswordSubmit} className="space-y-5">
           
-          {/* Email Input */}
+          {/* New Password Input */}
           <motion.div variants={itemVariants} className="space-y-2">
             <label className="text-xs font-bold text-slate-400 uppercase tracking-wider block">
-              Email Address
+              New Password
             </label>
-            <input
-              type="email"
-              placeholder="name@example.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full border border-slate-800 rounded-xl p-3 outline-none focus:border-slate-600 transition-colors text-slate-200 bg-slate-950/50 font-medium placeholder-slate-700 text-sm"
-              disabled={loading}
-              required
-            />
-          </motion.div>
-
-          {/* Password Input */}
-          <motion.div variants={itemVariants} className="space-y-2">
-            <div className="flex items-center justify-between">
-              <label className="text-xs font-bold text-slate-400 uppercase tracking-wider block">
-                Password
-              </label>
-              
-              {/* 🟢 FORGOT PASSWORD BUTTON */}
-              <button
-                type="button"
-                onClick={handleForgotPassword}
-                disabled={loading}
-                className="text-xs font-semibold text-indigo-400 hover:text-indigo-300 transition-colors cursor-pointer disabled:opacity-50"
-              >
-                Forgot Password?
-              </button>
-            </div>
-
             <div className="relative flex items-center">
               <input
-                type={showPassword ? "text" : "password"} 
-                placeholder="••••••••"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                type={showPassword ? "text" : "password"}
+                placeholder="Minimum 6 characters"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
                 className="w-full border border-slate-800 rounded-xl p-3 pr-11 outline-none focus:border-slate-600 transition-colors text-slate-200 bg-slate-950/50 font-medium placeholder-slate-700 text-sm"
                 disabled={loading}
                 required
               />
-              
               <motion.button
                 type="button"
                 whileTap={{ scale: 0.85 }}
@@ -126,6 +96,22 @@ const LogIn = () => {
             </div>
           </motion.div>
 
+          {/* Confirm Password Input */}
+          <motion.div variants={itemVariants} className="space-y-2">
+            <label className="text-xs font-bold text-slate-400 uppercase tracking-wider block">
+              Confirm New Password
+            </label>
+            <input
+              type={showPassword ? "text" : "password"}
+              placeholder="Re-enter new password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              className="w-full border border-slate-800 rounded-xl p-3 outline-none focus:border-slate-600 transition-colors text-slate-200 bg-slate-950/50 font-medium placeholder-slate-700 text-sm"
+              disabled={loading}
+              required
+            />
+          </motion.div>
+
           {/* Submit Button */}
           <motion.div variants={itemVariants} className="pt-3">
             <motion.button
@@ -135,24 +121,14 @@ const LogIn = () => {
               whileTap={{ scale: loading ? 1 : 0.99 }}
               className="w-full bg-slate-800 border border-slate-700/40 hover:bg-slate-750 text-slate-200 py-3.5 rounded-xl font-bold text-base shadow-md transition-colors cursor-pointer tracking-wide disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {loading ? "Signing In..." : "Sign In to Dashboard"}
+              {loading ? "Updating Password..." : "Update Password"}
             </motion.button>
           </motion.div>
         </form>
 
-        {/* FOOTER SECTION */}
-        <motion.p variants={itemVariants} className="text-center text-sm text-slate-400 mt-8 font-medium">
-          Don’t have an account?
-          <Link
-            to="/register"
-            className="ml-2 text-indigo-400 font-bold hover:text-indigo-300 transition-colors duration-200"
-          >
-            Sign Up
-          </Link>
-        </motion.p>
       </motion.div>
     </div>
   );
 };
 
-export default LogIn;
+export default ResetPassword;

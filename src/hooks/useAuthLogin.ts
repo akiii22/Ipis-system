@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../lib/supabase";
-import {toast} from "react-toastify";
+import { toast } from "react-toastify";
+
 export const useAuthLogin = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
@@ -33,6 +34,30 @@ export const useAuthLogin = () => {
     }
   };
 
+  //  NEW: Password reset email dispatcher
+  const handleForgotPassword = async () => {
+    if (!email.trim()) {
+      toast.error("Please enter your email address first.");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), {
+        redirectTo: `${window.location.origin}/reset-password`,
+      });
+
+      if (error) throw error;
+
+      toast.success("Password reset link sent! Check your email inbox.");
+    } catch (error: unknown) {
+      console.error("Password reset error details:", error);
+      toast.error((error as { message?: string })?.message || "Failed to send reset email.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return {
     email,
     setEmail,
@@ -42,5 +67,6 @@ export const useAuthLogin = () => {
     setShowPassword,
     loading,
     handleLoginSubmit,
+    handleForgotPassword, 
   };
 };
