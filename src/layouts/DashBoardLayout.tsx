@@ -1,17 +1,11 @@
 import { Outlet } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
-import Navbar from "../components/Navbar"; // Your Header component
-// Imported motion and type Variants to satisfy your verbatimModuleSyntax rules
+import Navbar from "../components/Navbar";
 import { motion, type Variants } from "framer-motion";
 
 const DashboardLayout = () => {
-  
-
   const pageTransitionVariants: Variants = {
-    initial: { 
-      opacity: 0, 
-      y: 12 
-    },
+    initial: { opacity: 0, y: 12 },
     animate: { 
       opacity: 1, 
       y: 0,
@@ -25,23 +19,23 @@ const DashboardLayout = () => {
   };
 
   return (
-    <div className="h-screen bg-gray-900 flex overflow-hidden select-none">
+    <div className="h-screen bg-[#030712] flex overflow-hidden select-none">
       
-      {/* Sidebar */}
+      {/* Sidebar Component */}
       <Sidebar />
 
-      {/* Main Content Area */}
+      {/* Main Area */}
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
         
-        {/* Navbar */}
+        {/* Navbar Header */}
         <Navbar />
 
-        {/* Page Content Container */}
+        {/* Dynamic Route Content */}
         <motion.main 
           variants={pageTransitionVariants}
           initial="initial"
           animate="animate"
-          className="flex-1 overflow-y-auto p-4 md:p-8 pb-24 md:pb-8"
+          className="flex-1 overflow-y-auto p-4 md:p-8 pb-24 md:pb-8 bg-[radial-gradient(ellipse_100%_100%_at_50%_-10%,rgba(14,165,233,0.08),rgba(255,255,255,0))]"
         >
           <Outlet />
         </motion.main>
