@@ -5,8 +5,6 @@ import {
   Shield,
   ShieldAlert,
   Loader2,
-  Moon,
-  Sun,
   Mail,
   KeyRound,
   Sparkles,
@@ -17,8 +15,6 @@ import { useAccountSettings } from "../hooks/useAccountSettings";
 const Account = () => {
   const avatarInputRef = useRef<HTMLInputElement | null>(null);
   
-  // Local state for UI preview toggle (replace with theme hook if available)
-  const [isDarkMode, setIsDarkMode] = useState(true);
 
   const {
     username,
