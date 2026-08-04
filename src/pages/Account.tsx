@@ -201,47 +201,6 @@ const Account = () => {
             </form>
           </div>
 
-          {/* APPEARANCE CARD */}
-          <div className="bg-slate-900/90 rounded-2xl p-6 border border-slate-800/80 shadow-xl">
-            <div className="flex items-center gap-3 mb-6">
-              <div className="p-2.5 bg-slate-950 border border-slate-800 rounded-xl text-indigo-400">
-                <Moon size={20} />
-              </div>
-              <div>
-                <h2 className="text-lg font-bold text-slate-100 tracking-tight">Appearance</h2>
-                <p className="text-xs text-slate-400">Customize how the interface looks on your device.</p>
-              </div>
-            </div>
-
-            <div className="flex items-center justify-between p-4 rounded-xl border border-slate-800/80 bg-slate-950/60">
-              <div>
-                <p className="text-sm font-semibold text-slate-200">Dark Mode</p>
-                <p className="text-xs text-slate-400 mt-0.5">Switch between dark and light themes.</p>
-              </div>
-
-              {/* Theme Toggle Button */}
-              <button
-                type="button"
-                onClick={() => setIsDarkMode(!isDarkMode)}
-                className={`relative w-16 h-9 rounded-full p-1 cursor-pointer transition-colors duration-300 ${
-                  isDarkMode ? "bg-indigo-950 border border-indigo-500/30" : "bg-slate-800 border border-slate-700"
-                }`}
-              >
-                <motion.div
-                  layout
-                  transition={{ type: "spring", stiffness: 500, damping: 30 }}
-                  className={`w-7 h-7 rounded-full flex items-center justify-center shadow-md ${
-                    isDarkMode ? "bg-indigo-600 text-white" : "bg-slate-200 text-slate-900"
-                  }`}
-                  style={{
-                    marginLeft: isDarkMode ? "auto" : "0",
-                  }}
-                >
-                  {isDarkMode ? <Moon size={14} /> : <Sun size={14} />}
-                </motion.div>
-              </button>
-            </div>
-          </div>
 
           {/* SECURITY CARD */}
           <div className="bg-slate-900/90 rounded-2xl p-6 border border-slate-800/80 shadow-xl">
