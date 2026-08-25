@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../lib/supabase";
-import {toast} from "react-toastify"
+import { toast } from "react-toastify";
+
 export const useAuthRegister = () => {
   const navigate = useNavigate();
 
@@ -15,7 +16,20 @@ export const useAuthRegister = () => {
 
   const handleRegisterSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    
+
+    const cleanEmail = email.trim().toLowerCase();
+    const cleanUsername = username.trim();
+
+    if (!cleanUsername) {
+      toast.error("Username cannot be empty.");
+      return;
+    }
+
+    if (password.length < 8) {
+      toast.error("Password must be at least 8 characters long.");
+      return;
+    }
+
     if (password !== confirmPassword) {
       toast.error("Passwords do not match.");
       return;
@@ -25,11 +39,11 @@ export const useAuthRegister = () => {
 
     try {
       const { data, error } = await supabase.auth.signUp({
-        email,
+        email: cleanEmail,
         password,
         options: {
           data: {
-            username: username.trim(),
+            username: cleanUsername,
           },
         },
       });
@@ -39,6 +53,13 @@ export const useAuthRegister = () => {
       if (!data.user) {
         throw new Error("Registration failed. No user was returned.");
       }
+
+      // Explicitly insert user profile metadata record into public table
+      await supabase.from("profiles").upsert({
+        id: data.user.id,
+        username: cleanUsername,
+        updated_at: new Date().toISOString(),
+      });
 
       toast.success("Account created successfully!");
       navigate("/");

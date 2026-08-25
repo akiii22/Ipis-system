@@ -7,7 +7,7 @@ export type Prediction = {
   height: number;
 };
 
-export const CONFIDENCE_THRESHOLD = 0.5;
+export const CONFIDENCE_THRESHOLD = 0.6;
 
 export const pestInfo = {
   ants: { risk: "Medium", recommendation: "Remove food crumbs, clean surfaces regularly, and seal entry points." },

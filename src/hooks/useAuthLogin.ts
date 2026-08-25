@@ -12,11 +12,17 @@ export const useAuthLogin = () => {
 
   const handleLoginSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setLoading(true);
+    const cleanEmail = email.trim().toLowerCase();
 
+    if (!cleanEmail || !password) {
+      toast.error("Please enter both email and password.");
+      return;
+    }
+
+    setLoading(true);
     try {
       const { data, error } = await supabase.auth.signInWithPassword({
-        email,
+        email: cleanEmail,
         password,
       });
 
@@ -34,21 +40,20 @@ export const useAuthLogin = () => {
     }
   };
 
-  //  NEW: Password reset email dispatcher
   const handleForgotPassword = async () => {
-    if (!email.trim()) {
+    const cleanEmail = email.trim().toLowerCase();
+    if (!cleanEmail) {
       toast.error("Please enter your email address first.");
       return;
     }
 
     setLoading(true);
     try {
-      const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), {
+      const { error } = await supabase.auth.resetPasswordForEmail(cleanEmail, {
         redirectTo: `${window.location.origin}/reset-password`,
       });
 
       if (error) throw error;
-
       toast.success("Password reset link sent! Check your email inbox.");
     } catch (error: unknown) {
       console.error("Password reset error details:", error);
@@ -67,6 +72,6 @@ export const useAuthLogin = () => {
     setShowPassword,
     loading,
     handleLoginSubmit,
-    handleForgotPassword, 
+    handleForgotPassword,
   };
 };

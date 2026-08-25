@@ -41,47 +41,33 @@ const ResetPassword = () => {
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-slate-950 flex items-center justify-center px-4 select-none">
-      
-      {/* Background Ambient Glows */}
       <div className="absolute w-[450px] h-[450px] bg-indigo-950/20 rounded-full blur-3xl opacity-60 -left-10 top-20 animate-pulse duration-[6000ms]" />
       <div className="absolute w-[400px] h-[400px] bg-slate-900/40 rounded-full blur-3xl opacity-50 -right-10 bottom-20 animate-pulse duration-[5000ms] delay-150" />
 
-      {/* GLASS CARD CONTAINER */}
       <motion.div
         variants={containerVariants}
         initial="hidden"
         animate="visible"
         className="relative w-full max-w-md backdrop-blur-xl bg-slate-950/40 border border-slate-800/80 rounded-[32px] shadow-2xl p-8 md:p-10"
       >
-        
-        {/* TITLE SECTION */}
         <motion.div variants={itemVariants} className="text-center mb-8">
           <div className="mx-auto w-12 h-12 rounded-2xl bg-slate-900 border border-slate-800 flex items-center justify-center text-indigo-400 mb-4 shadow-inner">
             <Lock size={22} />
           </div>
-          <h1 className="text-2xl font-extrabold text-slate-100 tracking-tight">
-            Set New Password
-          </h1>
-          <p className="mt-2 text-xs text-slate-400 font-medium">
-            Please enter and confirm your new account password below.
-          </p>
+          <h1 className="text-2xl font-extrabold text-slate-100 tracking-tight">Set New Password</h1>
+          <p className="mt-2 text-xs text-slate-400 font-medium">Please enter and confirm your new account password below.</p>
         </motion.div>
 
-        {/* FORM CONTAINER */}
         <form onSubmit={handleResetPasswordSubmit} className="space-y-5">
-          
-          {/* New Password Input */}
           <motion.div variants={itemVariants} className="space-y-2">
-            <label className="text-xs font-bold text-slate-400 uppercase tracking-wider block">
-              New Password
-            </label>
+            <label className="text-xs font-bold text-slate-400 uppercase tracking-wider block">New Password</label>
             <div className="relative flex items-center">
               <input
                 type={showPassword ? "text" : "password"}
-                placeholder="Minimum 6 characters"
+                placeholder="Minimum 8 characters"
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
-                className="w-full border border-slate-800 rounded-xl p-3 pr-11 outline-none focus:border-slate-600 transition-colors text-slate-200 bg-slate-950/50 font-medium placeholder-slate-700 text-sm"
+                className="w-full border border-slate-800 rounded-xl p-3 pr-11 outline-none focus:border-slate-600 transition-colors text-slate-200 bg-slate-950/50 font-medium placeholder-slate-700 text-sm disabled:opacity-50"
                 disabled={loading}
                 required
               />
@@ -96,23 +82,19 @@ const ResetPassword = () => {
             </div>
           </motion.div>
 
-          {/* Confirm Password Input */}
           <motion.div variants={itemVariants} className="space-y-2">
-            <label className="text-xs font-bold text-slate-400 uppercase tracking-wider block">
-              Confirm New Password
-            </label>
+            <label className="text-xs font-bold text-slate-400 uppercase tracking-wider block">Confirm New Password</label>
             <input
               type={showPassword ? "text" : "password"}
               placeholder="Re-enter new password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              className="w-full border border-slate-800 rounded-xl p-3 outline-none focus:border-slate-600 transition-colors text-slate-200 bg-slate-950/50 font-medium placeholder-slate-700 text-sm"
+              className="w-full border border-slate-800 rounded-xl p-3 outline-none focus:border-slate-600 transition-colors text-slate-200 bg-slate-950/50 font-medium placeholder-slate-700 text-sm disabled:opacity-50"
               disabled={loading}
               required
             />
           </motion.div>
 
-          {/* Submit Button */}
           <motion.div variants={itemVariants} className="pt-3">
             <motion.button
               type="submit"
@@ -125,7 +107,6 @@ const ResetPassword = () => {
             </motion.button>
           </motion.div>
         </form>
-
       </motion.div>
     </div>
   );

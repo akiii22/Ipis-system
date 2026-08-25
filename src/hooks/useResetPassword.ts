@@ -13,8 +13,8 @@ export const useResetPassword = () => {
   const handleResetPasswordSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (newPassword.length < 6) {
-      toast.error("Password must be at least 6 characters long.");
+    if (newPassword.length < 8) {
+      toast.error("Password must be at least 8 characters long.");
       return;
     }
 
@@ -26,7 +26,6 @@ export const useResetPassword = () => {
     setLoading(true);
 
     try {
-      // Supabase automatically uses the magic link recovery token from the URL
       const { error } = await supabase.auth.updateUser({
         password: newPassword,
       });
@@ -34,8 +33,7 @@ export const useResetPassword = () => {
       if (error) throw error;
 
       toast.success("Password updated successfully! Redirecting to login...");
-      
-      // Give the user a moment to read the toast before redirecting
+
       setTimeout(() => {
         navigate("/", { replace: true });
       }, 1500);

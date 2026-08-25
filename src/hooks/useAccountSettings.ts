@@ -96,7 +96,6 @@ export const useAccountSettings = () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error("Session invalid.");
 
-      // Enforce file tracking paths directly matching user id tokens
       const fileExt = file.name.split(".").pop();
       const filePath = `${user.id}.${fileExt}`;
 
@@ -107,15 +106,14 @@ export const useAccountSettings = () => {
 
       if (uploadError) throw uploadError;
 
-      // 2. Compute non-expiring public web link
+      // 2. Compute public web link with timestamp cache buster
       const { data: { publicUrl } } = supabase.storage
         .from("avatars")
         .getPublicUrl(filePath);
 
-      // Cache buster parameter ensures browsers don't serve old cached images
       const finalizedUrl = `${publicUrl}?t=${Date.now()}`;
 
-      // 3. Save reference path inside profiles schema row
+      // 3. Save reference path inside profiles table
       const { error: profileError } = await supabase
         .from("profiles")
         .update({ avatar_url: finalizedUrl })
@@ -127,13 +125,13 @@ export const useAccountSettings = () => {
       toast.success("Avatar updated successfully!");
     } catch (err: unknown) {
       console.error(err);
-      toast.error((err as { message?: string })?.message || "Storage validation error. Check file type/size limits.");
+      toast.error((err as { message?: string })?.message || "Storage validation error.");
     } finally {
       setUploadingAvatar(false);
     }
   };
 
-  // Securely update account login credentials
+  // Securely update password
   const handleUpdatePassword = async (e: React.FormEvent) => {
     e.preventDefault();
     if (newPassword.length < 6) {
