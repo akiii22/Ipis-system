@@ -15,6 +15,7 @@ import {
 } from "lucide-react"; 
 import { motion, AnimatePresence } from "framer-motion";
 import { usePestHistory, type HistoryItem } from "../hooks/usePestHistory";
+import { pestInfo, getNormalizedClass } from "../data/pestData";
 
 const History = () => {
   const { historyItems, loading, error, toggleFavorite, deleteItem, clearAllHistory } = usePestHistory();
@@ -79,7 +80,6 @@ const History = () => {
         </div>
 
         <div className="flex items-center gap-2.5">
-          {/* Search Input Bar */}
           <div className="relative flex items-center">
             <Search size={16} className="absolute left-3.5 text-blue-400/70" />
             <input
@@ -91,12 +91,10 @@ const History = () => {
             />
           </div>
 
-          {/* Filter Option Button */}
           <button className="p-2.5 bg-[#050918] border border-blue-900/40 hover:border-blue-500/50 rounded-xl text-slate-400 hover:text-white transition-all cursor-pointer">
             <SlidersHorizontal size={16} />
           </button>
 
-          {/* Clear All Action */}
           {!loading && historyItems.length > 0 && (
             <motion.button 
               whileHover={{ scale: 1.02 }} 
@@ -110,7 +108,6 @@ const History = () => {
         </div>
       </div>
 
-      {/* ERROR MESSAGE ALERT */}
       {error && (
         <div className="flex items-center gap-3 bg-red-950/40 text-red-400 border border-red-500/40 p-4 rounded-xl text-sm font-medium">
           <AlertCircle size={18} className="shrink-0" /> 
@@ -127,8 +124,6 @@ const History = () => {
               <p className="text-xs font-bold uppercase tracking-widest text-blue-300/80">Fetching historical diagnostics...</p>
             </motion.div>
           ) : filteredHistory.length === 0 ? (
-            
-            /* EMPTY SCAN HISTORY STATE CARD */
             <motion.div 
               key="empty-view" 
               initial={{ opacity: 0, scale: 0.96 }} 
@@ -136,7 +131,6 @@ const History = () => {
               exit={{ opacity: 0, scale: 0.96 }} 
               className="bg-[#070b19]/90 rounded-3xl border border-blue-900/30 p-12 text-center flex flex-col items-center justify-center min-h-[360px] shadow-[0_0_40px_rgba(15,23,42,0.6)]"
             >
-              {/* Glowing Clipboard Circle Badge */}
               <div className="w-20 h-20 rounded-full bg-indigo-950/60 border border-indigo-500/30 flex items-center justify-center text-indigo-400 shadow-[0_0_25px_rgba(99,102,241,0.25)] mb-4">
                 <ClipboardList size={36} />
               </div>
@@ -157,8 +151,6 @@ const History = () => {
               </motion.button>
             </motion.div>
           ) : (
-            
-            /* SCAN HISTORY ITEMS LIST */
             filteredHistory.map((item) => (
               <motion.div 
                 key={item.id} 
@@ -200,8 +192,6 @@ const History = () => {
 
       {/* DID YOU KNOW & QUICK STATS FOOTER PANEL */}
       <div className="bg-[#070b19]/90 rounded-2xl border border-blue-900/30 p-5 flex flex-col md:flex-row items-center justify-between gap-6 shadow-xl">
-        
-        {/* Left: Tip Section */}
         <div className="flex items-center gap-3.5">
           <div className="w-10 h-10 rounded-xl bg-blue-500/10 border border-blue-500/30 flex items-center justify-center text-blue-400 shrink-0 shadow-[0_0_12px_rgba(59,130,246,0.2)]">
             <Lightbulb size={20} />
@@ -214,10 +204,7 @@ const History = () => {
           </div>
         </div>
 
-        {/* Right: Metrics */}
         <div className="flex items-center gap-6 sm:gap-8 divide-x divide-blue-900/40">
-          
-          {/* Total Scans */}
           <div className="flex items-center gap-3 pl-2">
             <div className="w-9 h-9 rounded-lg bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400 shrink-0">
               <ScanSearch size={18} />
@@ -228,7 +215,6 @@ const History = () => {
             </div>
           </div>
 
-          {/* Pests Detected */}
           <div className="flex items-center gap-3 pl-6">
             <div className="w-9 h-9 rounded-lg bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-400 shrink-0">
               <Bug size={18} />
@@ -239,7 +225,6 @@ const History = () => {
             </div>
           </div>
 
-          {/* This Month */}
           <div className="flex items-center gap-3 pl-6">
             <div className="w-9 h-9 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 shrink-0">
               <Calendar size={18} />
@@ -249,53 +234,76 @@ const History = () => {
               <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mt-1">This Month</p>
             </div>
           </div>
-
         </div>
       </div>
 
       {/* DETAILS MODAL OVERLAY */}
       <AnimatePresence>
-        {selectedPest && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-slate-950/80 backdrop-blur-xs flex items-center justify-center z-50 px-4">
-            <motion.div initial={{ opacity: 0, scale: 0.92, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.94, y: 15 }} transition={{ type: "spring", duration: 0.35, bounce: 0.15 }} className="bg-[#080d22] border border-blue-500/30 rounded-3xl p-6 md:p-8 max-w-md w-full shadow-[0_0_50px_rgba(0,0,0,0.8)] relative">
-              <button onClick={() => setSelectedPest(null)} className="absolute top-4 right-5 text-slate-400 cursor-pointer hover:text-white transition-colors">
-                <X size={20} />
-              </button>
-              
-              <div className="overflow-hidden rounded-2xl border border-blue-500/30 h-52 w-full shadow-inner">
-                <img src={selectedPest.imageUrl} alt={selectedPest.pestName} className="w-full h-full object-cover" />
-              </div>
+        {selectedPest && (() => {
+          const key = getNormalizedClass(selectedPest.pestName);
+          const info = pestInfo[key as keyof typeof pestInfo];
 
-              <div className="mt-5 space-y-4">
-                <div className="flex items-center justify-between">
-                  <h2 className="text-2xl font-extrabold text-white tracking-tight capitalize">{selectedPest.pestName}</h2>
-                  <motion.button whileTap={{ scale: 0.75 }} onClick={() => handleFavoriteClick(selectedPest.id, selectedPest.isFavorited)} className="text-2xl cursor-pointer select-none">
-                    {selectedPest.isFavorited ? "❤️" : "🤍"}
+          return (
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-slate-950/80 backdrop-blur-xs flex items-center justify-center z-50 px-4">
+              <motion.div initial={{ opacity: 0, scale: 0.92, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.94, y: 15 }} transition={{ type: "spring", duration: 0.35, bounce: 0.15 }} className="bg-[#080d22] border border-blue-500/30 rounded-3xl p-6 md:p-8 max-w-lg w-full shadow-[0_0_50px_rgba(0,0,0,0.8)] relative max-h-[90vh] overflow-y-auto">
+                <button onClick={() => setSelectedPest(null)} className="absolute top-4 right-5 text-slate-400 cursor-pointer hover:text-white transition-colors">
+                  <X size={20} />
+                </button>
+                
+                <div className="overflow-hidden rounded-2xl border border-blue-500/30 h-48 w-full shadow-inner">
+                  <img src={selectedPest.imageUrl} alt={selectedPest.pestName} className="w-full h-full object-cover" />
+                </div>
+
+                <div className="mt-5 space-y-3.5">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h2 className="text-2xl font-extrabold text-white tracking-tight capitalize">{selectedPest.pestName}</h2>
+                      {info?.scientificName && (
+                        <p className="text-xs text-cyan-400 italic font-mono">{info.scientificName}</p>
+                      )}
+                    </div>
+                    <motion.button whileTap={{ scale: 0.75 }} onClick={() => handleFavoriteClick(selectedPest.id, selectedPest.isFavorited)} className="text-2xl cursor-pointer select-none">
+                      {selectedPest.isFavorited ? "❤️" : "🤍"}
+                    </motion.button>
+                  </div>
+                  
+                  <div className="flex justify-between text-sm border-b border-blue-900/30 pb-2 font-medium">
+                    <span className="text-slate-400">Confidence Match</span> 
+                    <span className="font-bold text-white">{selectedPest.confidence}%</span>
+                  </div>
+
+                  <div className="flex justify-between text-sm border-b border-blue-900/30 pb-2 font-medium">
+                    <span className="text-slate-400">Risk Level</span> 
+                    <span className={`px-2.5 py-0.5 rounded-full text-xs font-bold ${getRiskBadgeStyles(selectedPest.riskLevel)}`}>{selectedPest.riskLevel}</span>
+                  </div>
+
+                  {info?.diseases && (
+                    <div>
+                      <h3 className="font-bold text-rose-400 text-xs tracking-wide uppercase mb-0.5">Associated Diseases / Hazards</h3>
+                      <p className="text-xs text-slate-300 font-medium leading-relaxed">{info.diseases}</p>
+                    </div>
+                  )}
+
+                  {info?.prevention && (
+                    <div>
+                      <h3 className="font-bold text-cyan-400 text-xs tracking-wide uppercase mb-0.5">Prevention Strategy</h3>
+                      <p className="text-xs text-slate-300 font-medium leading-relaxed">{info.prevention}</p>
+                    </div>
+                  )}
+
+                  <div>
+                    <h3 className="font-bold text-blue-400 text-xs tracking-wide uppercase mb-0.5">Recommended Treatment</h3>
+                    <p className="text-xs text-slate-300 leading-relaxed font-medium">{selectedPest.recommendation || info?.recommendation}</p>
+                  </div>
+
+                  <motion.button whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.99 }} onClick={() => setSelectedPest(null)} className="w-full bg-blue-600/20 border border-blue-500/40 hover:bg-blue-600/30 text-white py-2.5 rounded-xl text-xs font-bold tracking-wide transition-colors cursor-pointer mt-2">
+                    Close Summary
                   </motion.button>
                 </div>
-                
-                <div className="flex justify-between text-sm border-b border-blue-900/30 pb-2.5 font-medium">
-                  <span className="text-slate-400">Confidence Match</span> 
-                  <span className="font-bold text-white">{selectedPest.confidence}%</span>
-                </div>
-
-                <div className="flex justify-between text-sm border-b border-blue-900/30 pb-2.5 font-medium">
-                  <span className="text-slate-400">Risk Level</span> 
-                  <span className={`px-2.5 py-0.5 rounded-full text-xs font-bold ${getRiskBadgeStyles(selectedPest.riskLevel)}`}>{selectedPest.riskLevel}</span>
-                </div>
-
-                <div>
-                  <h3 className="font-bold text-blue-400 text-xs tracking-wide uppercase mb-1">Recommended Treatment</h3>
-                  <p className="text-sm text-slate-300 leading-relaxed font-medium">{selectedPest.recommendation}</p>
-                </div>
-
-                <motion.button whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.99 }} onClick={() => setSelectedPest(null)} className="w-full bg-blue-600/20 border border-blue-500/40 hover:bg-blue-600/30 text-white py-3 rounded-xl font-bold tracking-wide transition-colors cursor-pointer">
-                  Close Summary
-                </motion.button>
-              </div>
+              </motion.div>
             </motion.div>
-          </motion.div>
-        )}
+          );
+        })()}
       </AnimatePresence>
 
     </div>

@@ -85,7 +85,6 @@ const Scanner = () => {
                   exit={{ opacity: 0 }} 
                   className="flex flex-col items-center justify-center gap-3"
                 >
-                  {/* Glowing Circular Upload Icon */}
                   <div className="w-16 h-16 rounded-full bg-blue-600/10 border border-blue-500/30 flex items-center justify-center text-blue-400 shadow-[0_0_20px_rgba(59,130,246,0.2)] mb-1">
                     <Upload size={28} />
                   </div>
@@ -99,7 +98,6 @@ const Scanner = () => {
           {/* ACTION BUTTONS GROUP */}
           <div className="flex flex-col sm:flex-row items-center gap-3 w-full max-w-md justify-center">
             
-            {/* Upload Button */}
             <motion.button 
               whileHover={{ scale: 1.02 }} 
               whileTap={{ scale: 0.98 }} 
@@ -110,7 +108,6 @@ const Scanner = () => {
               <Upload size={16} /> Upload Image
             </motion.button>
 
-            {/* Camera Button */}
             <motion.button 
               whileHover={{ scale: 1.02 }} 
               whileTap={{ scale: 0.98 }} 
@@ -121,7 +118,6 @@ const Scanner = () => {
               <Camera size={16} /> Open Camera
             </motion.button>
 
-            {/* Clear Button */}
             <motion.button 
               whileHover={{ scale: 1.02 }} 
               whileTap={{ scale: 0.98 }} 
@@ -136,7 +132,6 @@ const Scanner = () => {
             </motion.button>
           </div>
 
-          {/* Hidden File Inputs */}
           <input type="file" accept="image/*" hidden ref={fileInputRef} onChange={handleImageUpload} />
           <input type="file" accept="image/*" capture="environment" hidden ref={cameraInputRef} onChange={handleImageUpload} />
         </div>
@@ -145,7 +140,6 @@ const Scanner = () => {
       {/* DETECTION RESULT CARD */}
       <div className="bg-[#070b19]/90 rounded-3xl border border-blue-900/30 shadow-xl p-6 md:p-8 min-h-48 relative overflow-hidden">
         
-        {/* Title with Search Icon Pill */}
         <div className="flex items-center gap-3 mb-6">
           <div className="w-9 h-9 rounded-xl bg-blue-500/10 border border-blue-500/30 flex items-center justify-center text-blue-400 shadow-[0_0_12px_rgba(59,130,246,0.2)]">
             <Search size={18} />
@@ -155,7 +149,6 @@ const Scanner = () => {
 
         <AnimatePresence mode="wait">
           
-          {/* Loading State Overlay */}
           {loading && (
             <motion.div 
               key="loading-overlay" 
@@ -169,7 +162,6 @@ const Scanner = () => {
             </motion.div>
           )}
 
-          {/* Error State */}
           {error && (
             <motion.div 
               key="error-box" 
@@ -184,7 +176,6 @@ const Scanner = () => {
             </motion.div>
           )}
 
-          {/* Empty Fallback State */}
           {!loading && !error && !prediction && (
             <motion.div 
               key="fallback-text" 
@@ -201,21 +192,40 @@ const Scanner = () => {
             </motion.div>
           )}
 
-          {/* Prediction Results Display */}
           {!loading && prediction && (
             <motion.div key="results-table" variants={contentFadeVariants} initial="hidden" animate="visible" className="space-y-4">
-              <div className="flex justify-between border-b border-blue-900/30 pb-3 text-sm font-medium">
+              <div className="flex justify-between border-b border-blue-900/30 pb-3 text-sm font-medium items-center">
                 <span className="text-slate-400">Detected Classification</span>
-                <span className="font-bold text-white capitalize">{prediction.class}</span>
+                <div className="text-right">
+                  <span className="font-bold text-white capitalize block">{prediction.class}</span>
+                  {pestData?.scientificName && (
+                    <span className="text-xs text-cyan-400 italic font-mono">{pestData.scientificName}</span>
+                  )}
+                </div>
               </div>
+
               <div className="flex justify-between border-b border-blue-900/30 pb-3 text-sm font-medium">
                 <span className="text-slate-400">System Confidence</span>
                 <span className={`font-bold ${confidenceColor}`}>{Math.round(prediction.confidence * 100)}%</span>
               </div>
+
               <div className="flex justify-between border-b border-blue-900/30 pb-3 text-sm font-medium items-center">
                 <span className="text-slate-400">Risk Severity</span>
                 <span className={`px-3.5 py-0.5 rounded-full text-xs font-bold border ${pestData?.risk === "High" ? "bg-red-950/60 text-red-400 border-red-500/30 shadow-[0_0_10px_rgba(239,68,68,0.2)]" : pestData?.risk === "Medium" ? "bg-amber-950/60 text-amber-400 border-amber-500/30 shadow-[0_0_10px_rgba(245,158,11,0.2)]" : "bg-emerald-950/60 text-emerald-400 border-emerald-500/30 shadow-[0_0_10px_rgba(16,185,129,0.2)]"}`}>{pestData?.risk || "Unknown"}</span>
               </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-1">
+                <div className="bg-[#030612]/70 border border-blue-900/40 p-3.5 rounded-xl">
+                  <p className="text-xs text-rose-400 font-bold uppercase tracking-wider mb-1">Associated Diseases / Hazards</p>
+                  <p className="text-xs text-slate-300 font-medium leading-relaxed">{pestData?.diseases || "None reported."}</p>
+                </div>
+
+                <div className="bg-[#030612]/70 border border-blue-900/40 p-3.5 rounded-xl">
+                  <p className="text-xs text-cyan-400 font-bold uppercase tracking-wider mb-1">Prevention Strategy</p>
+                  <p className="text-xs text-slate-300 font-medium leading-relaxed">{pestData?.prevention || "No specific steps available."}</p>
+                </div>
+              </div>
+
               <div className="pt-2">
                 <p className="text-xs text-blue-400 font-bold uppercase tracking-wider mb-1">Diagnostic Recommendation</p>
                 <p className="text-sm text-slate-300 leading-relaxed font-medium">{pestData?.recommendation || "No immediate recommendation found."}</p>
