@@ -3,13 +3,13 @@
   "name": "Pest Scanner Diagnostics",
   "icons": [
     {
-      "src": "/Logo.png",
-      "type": "image/png",
+      "src": "/Logo.jpg",
+      "type": "image/jpg",
       "sizes": "192x192"
     },
     {
       "src": "/icon-512.png",
-      "type": "image/png",
+      "type": "image/jpg",
       "sizes": "512x512"
     }
   ],
