@@ -1,15 +1,17 @@
 import { useState } from "react";
 import { supabase } from "../lib/supabase";
-// import { toast } from "react-toastify";
 import { type Prediction, CONFIDENCE_THRESHOLD, pestInfo, getNormalizedClass } from "../data/pestData";
 
-// Extract the shape of a single pest entry directly from your imported pestInfo object
 type LocalPestData = typeof pestInfo[keyof typeof pestInfo];
+
+// Quality threshold for blurry or unidentifiable specimen images (55%)
+const BLUR_QUALITY_THRESHOLD = 0.55;
 
 export const usePestScanner = () => {
   const [image, setImage] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  const [warning, setWarning] = useState<string | null>(null);
   const [prediction, setPrediction] = useState<Prediction | null>(null);
 
   const ROBOFLOW_API_KEY = import.meta.env.VITE_ROBOFLOW_API_KEY;
@@ -38,7 +40,6 @@ export const usePestScanner = () => {
     }
   };
 
-  // Replaced 'any' with our safe LocalPestData type (and made it optional/nullable)
   const saveScanToHistory = async (
     predictionData: Prediction, 
     imageUrl: string, 
@@ -65,6 +66,7 @@ export const usePestScanner = () => {
   const processImageWithRoboflow = async (base64Image: string, rawFile: File) => {
     setLoading(true);
     setError(null);
+    setWarning(null);
     setPrediction(null);
 
     try {
@@ -81,20 +83,30 @@ export const usePestScanner = () => {
       const data = await response.json();
 
       if (!data.predictions || data.predictions.length === 0) {
-        setError("No pest detected.");
+        setError("No pest detected in the image. Please try another shot.");
         return;
       }
 
       const bestPrediction = data.predictions.sort((a: Prediction, b: Prediction) => b.confidence - a.confidence)[0];
 
-      if (bestPrediction.confidence < CONFIDENCE_THRESHOLD) {
-        setError(`No pest detected. Confidence too low (${Math.round(bestPrediction.confidence * 100)}%).`);
+      // Threshold Check 1: Image Blurry / Out of Focus / Unclear Specimen
+      if (bestPrediction.confidence < BLUR_QUALITY_THRESHOLD) {
+        setError(
+          `Image unclear or blurry (Match Confidence: ${Math.round(bestPrediction.confidence * 100)}%). Please upload or capture a well-lit, close-up photograph.`
+        );
         return;
+      }
+
+      // Threshold Check 2: Low-Moderate Confidence Warning Flag
+      if (bestPrediction.confidence < CONFIDENCE_THRESHOLD) {
+        setWarning(
+          `Moderate detection confidence (${Math.round(bestPrediction.confidence * 100)}%). Verify specimen features carefully.`
+        );
       }
 
       setPrediction(bestPrediction);
 
-      // Execute backend storage orchestration pipeline asynchronously
+      // Execute backend storage orchestration pipeline
       const permanentUrl = await uploadPestImage(rawFile);
       if (permanentUrl) {
         const key = getNormalizedClass(bestPrediction.class);
@@ -113,6 +125,7 @@ export const usePestScanner = () => {
     if (!file) return;
 
     setError(null);
+    setWarning(null);
     setPrediction(null);
     setImage(URL.createObjectURL(file));
 
@@ -128,7 +141,8 @@ export const usePestScanner = () => {
     setImage(null);
     setPrediction(null);
     setError(null);
+    setWarning(null);
   };
 
-  return { image, loading, error, prediction, handleImageUpload, clearScanner };
+  return { image, loading, error, warning, prediction, handleImageUpload, clearScanner };
 };

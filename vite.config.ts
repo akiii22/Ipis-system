@@ -22,17 +22,17 @@ export default defineConfig({
         orientation: 'portrait',
         icons: [
           {
-            src: '/Logo.png',
+            src: '/Logo.jpg',
             sizes: '192x192',
-            type: 'image/png',
+            type: 'image/jpg',
           },
           {
-            src: '/Logo.png',
+            src: '/Logo.jpg',
             sizes: '512x512',
-            type: 'image/png',
+            type: 'image/jpg',
           },
           {
-            src: '/Logo.png',
+            src: '/Logo.jpg',
             sizes: '512x512',
             type: 'image/png',
             purpose: 'any maskable',

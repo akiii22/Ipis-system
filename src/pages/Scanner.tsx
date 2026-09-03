@@ -1,6 +1,7 @@
 import { useRef } from "react";
-import { Loader2, AlertCircle, Upload, RefreshCw, Camera, Search, FileSearch, Bug } from "lucide-react";
+import { Loader2, AlertCircle, Upload, RefreshCw, Camera, Search, FileSearch, Bug, Download, AlertTriangle } from "lucide-react";
 import { motion, AnimatePresence, type Variants } from "framer-motion";
+import jsPDF from "jspdf";
 import { usePestScanner } from "../hooks/usePestScanner";
 import { pestInfo, getNormalizedClass } from "../data/pestData";
 
@@ -8,7 +9,7 @@ const Scanner = () => {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const cameraInputRef = useRef<HTMLInputElement | null>(null);
 
-  const { image, loading, error, prediction, handleImageUpload, clearScanner } = usePestScanner();
+  const { image, loading, error, warning, prediction, handleImageUpload, clearScanner } = usePestScanner();
 
   const confidenceColor =
     prediction?.confidence && prediction.confidence >= 0.9
@@ -26,13 +27,105 @@ const Scanner = () => {
   const normalizedKey = prediction ? getNormalizedClass(prediction.class) : "";
   const pestData = normalizedKey ? pestInfo[normalizedKey as keyof typeof pestInfo] : null;
 
+  // PDF Report Generator
+  const generatePdfReport = () => {
+    if (!prediction || !pestData) return;
+
+    const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
+    const currentDate = new Date().toLocaleString();
+
+    // Document Header
+    doc.setFillColor(15, 23, 42); // Dark slate bg header
+    doc.rect(0, 0, 210, 35, "F");
+    
+    doc.setTextColor(56, 189, 248);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(18);
+    doc.text("I.P.I.S DIAGNOSTIC REPORT", 14, 18);
+
+    doc.setTextColor(148, 163, 184);
+    doc.setFontSize(9);
+    doc.text("Intelligent Pest Identification System • Automated Inspection Log", 14, 25);
+    doc.text(`Generated: ${currentDate}`, 130, 25);
+
+    // Section 1: Classification Overview
+    doc.setTextColor(15, 23, 42);
+    doc.setFontSize(12);
+    doc.setFont("helvetica", "bold");
+    doc.text("1. Specimen Identification Details", 14, 45);
+
+    doc.setLineWidth(0.5);
+    doc.setDrawColor(226, 232, 240);
+    doc.line(14, 47, 196, 47);
+
+    doc.setFontSize(10);
+    doc.setFont("helvetica", "normal");
+    doc.text(`Detected Species:`, 14, 55);
+    doc.setFont("helvetica", "bold");
+    doc.text(`${prediction.class.toUpperCase()}`, 60, 55);
+
+    doc.setFont("helvetica", "normal");
+    doc.text(`Scientific Name:`, 14, 62);
+    doc.setFont("helvetica", "italic");
+    doc.text(`${pestData.scientificName || "N/A"}`, 60, 62);
+
+    doc.setFont("helvetica", "normal");
+    doc.text(`Confidence Match:`, 14, 69);
+    doc.setFont("helvetica", "bold");
+    doc.text(`${Math.round(prediction.confidence * 100)}%`, 60, 69);
+
+    doc.setFont("helvetica", "normal");
+    doc.text(`Risk Severity:`, 14, 76);
+    doc.setFont("helvetica", "bold");
+    doc.text(`${pestData.risk || "Unknown"}`, 60, 76);
+
+    // Section 2: Hazard Analysis & Strategy
+    doc.setFontSize(12);
+    doc.setFont("helvetica", "bold");
+    doc.text("2. Health Hazards & Associated Diseases", 14, 90);
+    doc.line(14, 92, 196, 92);
+
+    doc.setFontSize(9.5);
+    doc.setFont("helvetica", "normal");
+    const diseaseLines = doc.splitTextToSize(pestData.diseases || "None reported.", 180);
+    doc.text(diseaseLines, 14, 100);
+
+    doc.setFontSize(12);
+    doc.setFont("helvetica", "bold");
+    doc.text("3. Prevention & Control Strategy", 14, 120);
+    doc.line(14, 122, 196, 122);
+
+    doc.setFontSize(9.5);
+    doc.setFont("helvetica", "normal");
+    const preventionLines = doc.splitTextToSize(pestData.prevention || "No specific steps available.", 180);
+    doc.text(preventionLines, 14, 130);
+
+    doc.setFontSize(12);
+    doc.setFont("helvetica", "bold");
+    doc.text("4. Diagnostic Recommendation", 14, 155);
+    doc.line(14, 157, 196, 157);
+
+    doc.setFontSize(9.5);
+    doc.setFont("helvetica", "normal");
+    const recLines = doc.splitTextToSize(pestData.recommendation || "No immediate recommendation found.", 180);
+    doc.text(recLines, 14, 165);
+
+    // Footer
+    doc.setFontSize(8);
+    doc.setTextColor(148, 163, 184);
+    doc.text("Confidential • Official IPIS Capstone Inspection Document", 14, 285);
+
+    // Trigger Save
+    doc.save(`IPIS_Pest_Report_${prediction.class}_${Date.now()}.pdf`);
+  };
+
   return (
     <div className="space-y-6 max-w-5xl mx-auto pb-12 select-none">
       
       {/* MAIN SCANNER CONTAINER */}
       <div className="relative overflow-hidden bg-[#070b19]/90 rounded-3xl border border-blue-900/30 shadow-[0_0_40px_rgba(15,23,42,0.6)] p-6 md:p-8">
         
-        {/* HEADER SECTION WITH TOP-RIGHT HUD TARGET */}
+        {/* HEADER SECTION WITH HUD TARGET */}
         <div className="flex items-start justify-between mb-6">
           <div>
             <h1 className="text-3xl font-extrabold text-white tracking-tight">Pest Scanner</h1>
@@ -41,7 +134,6 @@ const Scanner = () => {
             </p>
           </div>
 
-          {/* HUD Bug Target Element */}
           <div className="hidden sm:flex relative w-16 h-16 items-center justify-center shrink-0">
             <div className="absolute inset-0 bg-blue-500/10 rounded-xl border border-blue-400/30 blur-[1px]" />
             <span className="absolute top-0 left-0 w-2.5 h-2.5 border-t-2 border-l-2 border-cyan-400" />
@@ -67,7 +159,6 @@ const Scanner = () => {
                 >
                   <img src={image} alt="Preview" className="w-full h-full object-cover" />
                   
-                  {/* Laser Scanning Line Overlay */}
                   {loading && (
                     <motion.div 
                       initial={{ top: "0%" }} 
@@ -97,7 +188,6 @@ const Scanner = () => {
 
           {/* ACTION BUTTONS GROUP */}
           <div className="flex flex-col sm:flex-row items-center gap-3 w-full max-w-md justify-center">
-            
             <motion.button 
               whileHover={{ scale: 1.02 }} 
               whileTap={{ scale: 0.98 }} 
@@ -140,11 +230,25 @@ const Scanner = () => {
       {/* DETECTION RESULT CARD */}
       <div className="bg-[#070b19]/90 rounded-3xl border border-blue-900/30 shadow-xl p-6 md:p-8 min-h-48 relative overflow-hidden">
         
-        <div className="flex items-center gap-3 mb-6">
-          <div className="w-9 h-9 rounded-xl bg-blue-500/10 border border-blue-500/30 flex items-center justify-center text-blue-400 shadow-[0_0_12px_rgba(59,130,246,0.2)]">
-            <Search size={18} />
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-xl bg-blue-500/10 border border-blue-500/30 flex items-center justify-center text-blue-400 shadow-[0_0_12px_rgba(59,130,246,0.2)]">
+              <Search size={18} />
+            </div>
+            <h2 className="text-xl font-extrabold text-white tracking-tight">Detection Result</h2>
           </div>
-          <h2 className="text-xl font-extrabold text-white tracking-tight">Detection Result</h2>
+
+          {/* Download PDF Button */}
+          {prediction && pestData && (
+            <motion.button
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.97 }}
+              onClick={generatePdfReport}
+              className="flex items-center gap-2 bg-cyan-950/60 border border-cyan-500/40 text-cyan-400 hover:bg-cyan-900/80 hover:text-white px-4 py-2 rounded-xl text-xs font-bold shadow-[0_0_15px_rgba(34,211,238,0.2)] transition-all cursor-pointer"
+            >
+              <Download size={14} /> Export PDF Report
+            </motion.button>
+          )}
         </div>
 
         <AnimatePresence mode="wait">
@@ -162,6 +266,7 @@ const Scanner = () => {
             </motion.div>
           )}
 
+          {/* BLUR / ERROR ALERT BOX */}
           {error && (
             <motion.div 
               key="error-box" 
@@ -169,10 +274,27 @@ const Scanner = () => {
               initial="hidden" 
               animate="visible" 
               exit="exit" 
-              className="flex items-center gap-3 bg-red-950/40 text-red-400 border border-red-500/40 p-4 rounded-xl text-sm font-medium"
+              className="flex items-start gap-3 bg-red-950/40 text-red-400 border border-red-500/40 p-4 rounded-xl text-sm font-medium"
             >
-              <AlertCircle size={18} className="shrink-0" />
-              <p>{error}</p>
+              <AlertCircle size={20} className="shrink-0 mt-0.5" />
+              <div>
+                <p className="font-bold text-red-300">Detection Failed / Image Quality Warning</p>
+                <p className="text-xs text-red-400/90 mt-1">{error}</p>
+              </div>
+            </motion.div>
+          )}
+
+          {/* MODERATE CONFIDENCE WARNING BADGE */}
+          {warning && (
+            <motion.div 
+              key="warning-box" 
+              variants={contentFadeVariants} 
+              initial="hidden" 
+              animate="visible" 
+              className="mb-4 flex items-center gap-2 bg-amber-950/40 text-amber-400 border border-amber-500/40 p-3 rounded-xl text-xs font-medium"
+            >
+              <AlertTriangle size={16} className="shrink-0" />
+              <p>{warning}</p>
             </motion.div>
           )}
 
