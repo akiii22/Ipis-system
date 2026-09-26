@@ -91,10 +91,6 @@ const History = () => {
             />
           </div>
 
-          <button className="p-2.5 bg-[#050918] border border-blue-900/40 hover:border-blue-500/50 rounded-xl text-slate-400 hover:text-white transition-all cursor-pointer">
-            <SlidersHorizontal size={16} />
-          </button>
-
           {!loading && historyItems.length > 0 && (
             <motion.button 
               whileHover={{ scale: 1.02 }} 
