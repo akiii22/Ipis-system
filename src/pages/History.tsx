@@ -5,7 +5,6 @@ import {
   Loader2, 
   AlertCircle, 
   Search, 
-  SlidersHorizontal, 
   ClipboardList, 
   ScanSearch, 
   Lightbulb, 
